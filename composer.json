@@ -1,0 +1,27 @@
+{
+    "name": "Noxxie/ptv-laravel",
+    "description": "Interface between your application and the PTV transfer database",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Patrick Rennings",
+            "email": "info@noxxie.nl"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Noxxie\\Ptv\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Noxxie\\Ptv\\PtvServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "watson/validating": "^3.1",
+        "awobaz/compoships": "^1.1"
+    }
+}
