@@ -29,9 +29,21 @@ You can also easily get exported routes from the PTV application using the funct
 
 This package can be used in Laravel 5.4 or higher. Lower versions are currently not supported.
 
-You can install the package via composer:
+You can install the package via composer, add the following to your composer.json:
 >``
->composer require noxxie\ptv-laravel
+>"repositories": [
+>        {
+>           "type": "vcs",
+>            "url":  "git@gitlab.com:Bosveld/Alliander.git"
+>        }
+>    ],
+>
+>``
+
+And in your require tag of the composer.json file:
+
+>``
+>"Bosveld/ptv-laravel": "dev-master"
 >``
 
 You can publish the config file like:
