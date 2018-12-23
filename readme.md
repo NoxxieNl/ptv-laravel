@@ -30,7 +30,7 @@ You can also easily get exported routes from the PTV application using the funct
 This package can be used in Laravel 5.4 or higher. Lower versions are currently not supported.
 
 You can install the package via composer, add the following to your composer.json:
->``
+>````json
 >"repositories": [
 >        {
 >           "type": "vcs",
@@ -38,13 +38,13 @@ You can install the package via composer, add the following to your composer.jso
 >        }
 >    ],
 >
->``
+>````
 
 And in your require tag of the composer.json file:
 
->``
+>````json
 >"Bosveld/ptv-laravel": "dev-master"
->``
+>````
 
 You can publish the config file like:
 >``php artisan vendor:publish --provider="Noxxie\Ptv\PtvServiceProvider" --tag="config"``
