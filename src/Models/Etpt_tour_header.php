@@ -5,6 +5,7 @@ namespace Noxxie\ptv\models;
 use Illuminate\Database\Eloquent\Model;
 
 use Noxxie\Ptv\Models\Etpt_export_header;
+use Carbon\Carbon;
 
 class Etpt_tour_header extends Model
 {
@@ -54,7 +55,7 @@ class Etpt_tour_header extends Model
      * @var string
      */
     protected $connection;
-
+    
     /**
      * Constructor function
      */
@@ -73,5 +74,29 @@ class Etpt_tour_header extends Model
     public function exphexportheader()
     {
         return $this->belongsTo(Exph_export_header::class, 'ETPT_EXPH_REFERENCE', 'EXPH_REFERENCE');
+    }
+
+    /**
+     * Create Carbon object voor ETPT_START_DATETIME
+     *
+     * @param string $value
+     * @return Carbon\Carbon
+     */
+    public function getEtptStartDatetimeAttribute(string $value)
+    {
+        $hackDts = explode('+', $value);
+        return Carbon::createFromFormat('Y-m-d\TH:i:s', $hackDts[0]);
+    }
+
+    /**
+     * Create Carbon object voor ETPT_END_DATETIME
+     *
+     * @param string $value
+     * @return Carbon\Carbon
+     */
+    public function getEtptEndDatetimeAttribute(string $value)
+    {
+        $hackDts = explode('+', $value);
+        return Carbon::createFromFormat('Y-m-d\TH:i:s', $hackDts[0]);
     }
 }

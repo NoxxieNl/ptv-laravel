@@ -95,7 +95,7 @@ class GetRoute
         $data['id'] = $route->EXPH_REFERENCE;
         $data['routenumber'] = $route->EXPH_EXTID;
         $data['vehicle'] = !is_null($route->etpttourheader) ? $route->etpttourheader->ETPT_VEHICLE_EXTID1 : '';
-        $data['date'] = !is_null($route->etpttourheader) ? $route->etpttourheader->ETPT_START_DATETIME : '';
+        $data['date'] = !is_null($route->etpttourheader) ? $route->etpttourheader->ETPT_START_DATETIME->format('d-m-Y'): '';
         $data['type'] = $route->EXPH_ACTION_CODE;
         $data['details'] = [];
 
@@ -117,10 +117,10 @@ class GetRoute
                         $data['details'][] = [
                             'reference' => $actionpoint->ETPA_ORDER_EXTID1,
                             'order' => $actionpoint->ETPA_ETPS_TOURPOINT_SEQUENCE,
-                            'street' => $actionpoint->ETPA_STREET,
-                            'houseno' => $actionpoint->ETPA_HOUSENO,
-                            'city' => $actionpoint->ETPA_CITY,
-                            'postcode' => $actionpoint->ETPA_POSTCODE
+                            'street' => preg_replace('/[\x00-\x1F\x7F]/u', '', $actionpoint->ETPA_STREET),
+                            'houseno' => preg_replace('/[\x00-\x1F\x7F]/u', '', $actionpoint->ETPA_HOUSENO),
+                            'city' =>  preg_replace('/[\x00-\x1F\x7F]/u', '', $actionpoint->ETPA_CITY),
+                            'postcode' => preg_replace('/[\x00-\x1F\x7F]/u', '', $actionpoint->ETPA_POSTCODE)
                         ];
                     }
                 }

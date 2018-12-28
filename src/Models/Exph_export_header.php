@@ -59,6 +59,15 @@ class Exph_export_header extends Model
     protected $connection;
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'EXPH_REFERENCE' => 'integer',
+    ];
+
+    /**
      * Constructor function
      */
     public function __construct()
