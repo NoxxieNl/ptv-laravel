@@ -34,7 +34,7 @@ You can install the package via composer, add the following to your composer.jso
 >"repositories": [
 >        {
 >           "type": "vcs",
->            "url":  "git@gitlab.com:Bosveld/Alliander.git"
+>            "url":  "git@gitlab.com:Bosveld/ptv-laravel.git"
 >        }
 >    ],
 >

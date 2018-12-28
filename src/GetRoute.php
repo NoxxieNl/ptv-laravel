@@ -1,6 +1,7 @@
 <?php
 namespace Noxxie\Ptv;
 
+use Illuminate\Support\Facades\DB;
 use Noxxie\Ptv\Models\Exph_export_header;
 
 class GetRoute
@@ -98,19 +99,30 @@ class GetRoute
         $data['type'] = $route->EXPH_ACTION_CODE;
         $data['details'] = [];
 
+        // We dont use eloquent relationships because of the composit relation between the tables
+        // This slows down the application by allot...
         if (!is_null($route->etpstourstops)) {
-            foreach ($route->etpstourstops as $tourstop) {
-                
-                foreach($tourstop->etpatouractionpoint()->withoutDepot()->get() as $actionpoint)
+            $actionpoints = DB::connection(config('ptv.connection'))->table('ETPA_TOUR_ACTIONPOINT')->where([
+                ['ETPA_ETPS_EXPH_REFERENCE', $route->etpstourstops->first()->ETPS_EXPH_REFERENCE],
+                ['ETPA_LOCATION_FUNCTION', '!=', 'DEPOT']
+            ])->get();
+
+            foreach ($route->etpstourstops as $tourstop)
+            {
+                foreach ($actionpoints as $actionpoint) 
                 {
-                    $data['details'][] = [
-                        'reference' => $actionpoint->ETPA_ORDER_EXTID1,
-                        'order' => $actionpoint->ETPA_ETPS_TOURPOINT_SEQUENCE,
-                        'street' => $actionpoint->ETPA_STREET,
-                        'houseno' => $actionpoint->ETPA_HOUSENO,
-                        'city' => $actionpoint->ETPA_CITY,
-                        'postcode' => $actionpoint->ETPA_POSTCODE
-                    ];
+                    if ($tourstop->ETPS_TOURPOINT_SEQUENCE == $actionpoint->ETPA_ETPS_TOURPOINT_SEQUENCE AND
+                        $tourstop->ETPS_EXPH_REFERENCE == $actionpoint->ETPA_ETPS_EXPH_REFERENCE) {
+
+                        $data['details'][] = [
+                            'reference' => $actionpoint->ETPA_ORDER_EXTID1,
+                            'order' => $actionpoint->ETPA_ETPS_TOURPOINT_SEQUENCE,
+                            'street' => $actionpoint->ETPA_STREET,
+                            'houseno' => $actionpoint->ETPA_HOUSENO,
+                            'city' => $actionpoint->ETPA_CITY,
+                            'postcode' => $actionpoint->ETPA_POSTCODE
+                        ];
+                    }
                 }
             }
         }
