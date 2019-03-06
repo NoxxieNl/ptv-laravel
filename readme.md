@@ -111,8 +111,8 @@ When you want to create a new order within PTV you can also resolve the instance
 ````php
 $order = App()->MakeWith('Noxxie\Ptv\Order', [
 	'type' => 'CREATE',
-	'attributes' => ...)
-];
+    'attributes' => ...
+]);
 ````
 
 The same applies for resolving a route from the service container. However the functionality is limited to fetch one route from the database.
