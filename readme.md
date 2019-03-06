@@ -143,7 +143,9 @@ public function mockup() {
 
 Go use this package to create a awesome import to your PTV application. This package was created purely for the usage of my own project I am/was working on. However you are free to use this in any way you want to use it.
 
-For more detailed examples and documentation look in the docs folder to get details about the [order](order/readme.md) and `route` instances and what they can to exactly.
+For more detailed examples and documentation look in the docs folder to get details about the [order](docs/order.md) and [route](docs/route.md) instances and what they can to exactly.
+
+For the extra step into making sure your data is really imported into PTV you can checkout the [ImportCheck][docs/importcheck.md] functionality.
 
 ## License
 
