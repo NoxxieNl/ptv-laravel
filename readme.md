@@ -145,7 +145,7 @@ Go use this package to create a awesome import to your PTV application. This pac
 
 For more detailed examples and documentation look in the docs folder to get details about the [order](docs/order.md) and [route](docs/route.md) instances and what they can to exactly.
 
-For the extra step into making sure your data is really imported into PTV you can checkout the [ImportCheck][docs/importcheck.md] functionality.
+For the extra step into making sure your data is really imported into PTV you can checkout the (ImportCheck)[docs/importcheck.md] functionality.
 
 ## License
 
