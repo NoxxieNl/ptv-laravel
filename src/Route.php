@@ -1,28 +1,31 @@
 <?php
+
 namespace Noxxie\Ptv;
 
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use InvalidArgumentException;
 use Noxxie\Ptv\Contracts\Route as DefaultRouteContract;
+use Noxxie\Ptv\Exceptions\InvalidModelException;
+use Noxxie\Ptv\Exceptions\InvalidTypeArgumentException;
 use Noxxie\Ptv\Models\Exph_export_header;
 use Noxxie\Ptv\Models\Route as RouteModel;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
-use Noxxie\Ptv\Exceptions\InvalidTypeArgumentException;
-use Noxxie\Ptv\Exceptions\InvalidModelException;
-use \InvalidArgumentException;
 
-class Route implements DefaultRouteContract {
-
+class Route implements DefaultRouteContract
+{
     /**
-     * Retrieve a route by its reference, if more then one export of the route is found only the most recent will be retrieved
+     * Retrieve a route by its reference, if more then one export of the route is found only the most recent will be retrieved.
      *
-     * @param int $id
+     * @param int  $id
      * @param bool $latestOnly
+     *
      * @return void
      */
-    public function get(int $id, bool $latestOnly = true) {
+    public function get(int $id, bool $latestOnly = true)
+    {
 
         // Search for the given $id, if the given $id has more then one record in the database return the most recent one
         if (is_null($result = Exph_export_header::whereReference($id)->orderBy('EXPH_CREATION_TIME', 'desc')->get())) {
-            return null;
+            return;
         }
 
         /*
@@ -31,9 +34,10 @@ class Route implements DefaultRouteContract {
         */
         if ($latestOnly) {
             $result = $result->first();
+
             return RouteModel::create($result);
         } else {
-            $collection = new EloquentCollection;
+            $collection = new EloquentCollection();
             $result->each(function ($instance) use (&$collection) {
                 $collection->push(RouteModel::create($instance));
             });
@@ -43,12 +47,14 @@ class Route implements DefaultRouteContract {
     }
 
     /**
-     * Retrieve all the routes that are not marked as imported
+     * Retrieve all the routes that are not marked as imported.
      *
      * @param string|null $type
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getNotImported(?string $type = null) {
+    public function getNotImported(?string $type = null)
+    {
 
         // Check if the given type is a valid type
         if (!is_null($type) and !in_array(strtoupper($type), ['NEW', 'UPDATE', 'DELETE'])) {
@@ -62,14 +68,15 @@ class Route implements DefaultRouteContract {
 
         // Collect all the route data and serve it back to the user
         $routes = RouteModel::create($results);
+
         return $routes;
     }
 
     /**
-     * Mark a route with the specified code
+     * Mark a route with the specified code.
      *
      * @param \Noxxie\Ptv\Models\Route|Illuminate\Database\Eloquent\Collection $data
-     * @param int $code
+     * @param int                                                              $code
      *
      * @return bool
      */
@@ -106,9 +113,10 @@ class Route implements DefaultRouteContract {
     }
 
     /**
-     * Helper function for easy update route as imported
+     * Helper function for easy update route as imported.
      *
      * @param \Noxxie\Ptv\Models\Route|Illuminate\Database\Eloquent\Collection $data
+     *
      * @return bool
      */
     public function markAsImported($data)
@@ -117,9 +125,10 @@ class Route implements DefaultRouteContract {
     }
 
     /**
-     * Helper function for easy update route as failed
+     * Helper function for easy update route as failed.
      *
      * @param \Noxxie\Ptv\Models\Route|Illuminate\Database\Eloquent\Collection $data
+     *
      * @return bool
      */
     public function markAsFailed($data)

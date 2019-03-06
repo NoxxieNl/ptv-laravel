@@ -1,7 +1,9 @@
 <?php
+
 namespace Noxxie\Ptv\Exceptions;
-use \Exception;
 
-class InvalidTypeArgumentException extends Exception {
+use Exception;
 
+class InvalidTypeArgumentException extends Exception
+{
 }

@@ -2,11 +2,9 @@
 
 namespace Noxxie\Ptv\Models;
 
-use Noxxie\Ptv\Models\Iorh_order_header;
-use Noxxie\Ptv\Models\Iora_order_actionpoint;
-use Watson\Validating\ValidatingTrait;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Watson\Validating\ValidatingTrait;
 
 class Imph_import_header extends Model
 {
@@ -20,7 +18,7 @@ class Imph_import_header extends Model
     protected $connection;
 
     /**
-     * Constructor function
+     * Constructor function.
      */
     public function __construct()
     {
@@ -28,7 +26,7 @@ class Imph_import_header extends Model
         $this->connection = config('ptv.connection');
 
         // Correct the rules settings
-        $this->rules['IMPH_REFERENCE'] = str_replace('ptv.', config('ptv.connection') . '.', $this->rules['IMPH_REFERENCE']);
+        $this->rules['IMPH_REFERENCE'] = str_replace('ptv.', config('ptv.connection').'.', $this->rules['IMPH_REFERENCE']);
 
         // Allow parent to do his work
         parent::__construct();
@@ -36,36 +34,36 @@ class Imph_import_header extends Model
 
     /**
      * Validation rules for validation the specified information
-     * if any of the data is not valid the model will not insert the record
+     * if any of the data is not valid the model will not insert the record.
      *
      * @var array
      */
     protected $rules = [
-        'IMPH_REFERENCE' => 'unique:ptv.IMPH_IMPORT_HEADER,IMPH_REFERENCE|required|integer|digits_between:0,999999999',
-        'IMPH_CONTEXT' => 'required|string|max:20',
-        'IMPH_OBJECT_TYPE' => 'required|string',
-        'IMPH_ACTION_CODE' => 'required|in:NEW,UPDATE,DELETE',
-        'IMPH_EXTID' => 'required|string|max:50',
-        'IMPH_PROCESS_CODE' => 'required|integer|in:0,10,20',
+        'IMPH_REFERENCE'     => 'unique:ptv.IMPH_IMPORT_HEADER,IMPH_REFERENCE|required|integer|digits_between:0,999999999',
+        'IMPH_CONTEXT'       => 'required|string|max:20',
+        'IMPH_OBJECT_TYPE'   => 'required|string',
+        'IMPH_ACTION_CODE'   => 'required|in:NEW,UPDATE,DELETE',
+        'IMPH_EXTID'         => 'required|string|max:50',
+        'IMPH_PROCESS_CODE'  => 'required|integer|in:0,10,20',
         'IMPH_CREATION_TIME' => 'required|date_format:Ymd',
-        'IMPH_DESCRIPTION' => 'string'
+        'IMPH_DESCRIPTION'   => 'string',
     ];
 
     /**
      * Because of how the validator works all the error messages returned the :attribute field would put in spaces
-     * afther every letter, we dont want that, so we specify each field what name it must be
+     * afther every letter, we dont want that, so we specify each field what name it must be.
      *
      * @var array
      */
     protected $validationAttributeNames = [
-        'IMPH_REFERENCE' => 'IMPH_REFERENCE',
-        'IMPH_CONTEXT' => 'IMPH_CONTEXT',
-        'IMPH_OBJECT_TYPE' => 'IMPH_OBJECT_TYPE',
-        'IMPH_ACTION_CODE' => 'IMPH_ACTION_CODE',
-        'IMPH_EXTID' => 'IMPH_EXTID',
-        'IMPH_PROCESS_CODE' => 'IMPH_PROCESS_CODE',
+        'IMPH_REFERENCE'     => 'IMPH_REFERENCE',
+        'IMPH_CONTEXT'       => 'IMPH_CONTEXT',
+        'IMPH_OBJECT_TYPE'   => 'IMPH_OBJECT_TYPE',
+        'IMPH_ACTION_CODE'   => 'IMPH_ACTION_CODE',
+        'IMPH_EXTID'         => 'IMPH_EXTID',
+        'IMPH_PROCESS_CODE'  => 'IMPH_PROCESS_CODE',
         'IMPH_CREATION_TIME' => 'IMPH_CREATION_TIME',
-        'IMPH_DESCRIPTION' => 'IMPH_DESCRIPTION'
+        'IMPH_DESCRIPTION'   => 'IMPH_DESCRIPTION',
     ];
 
     /**
@@ -97,9 +95,9 @@ class Imph_import_header extends Model
     public $incrementing = false;
 
     /**
-     * Indicates if timestamp columns are present in the table
+     * Indicates if timestamp columns are present in the table.
      *
-     * @var boolean
+     * @var bool
      */
     public $timestamps = false;
 
@@ -108,7 +106,7 @@ class Imph_import_header extends Model
      *
      * @var array
      */
-    protected $guarded  = [];
+    protected $guarded = [];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -127,9 +125,10 @@ class Imph_import_header extends Model
     }
 
     /**
-     * Scope a query to filter the not checked lines
+     * Scope a query to filter the not checked lines.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeWhereImportNotChecked(Builder $query)

@@ -2,15 +2,13 @@
 
 namespace Noxxie\ptv\models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-
+use Illuminate\Database\Eloquent\Model;
 use Noxxie\Ptv\Models\Etps_tour_stop;
 use Noxxie\Ptv\Models\Etpt_tour_header;
 
 class Exph_export_header extends Model
 {
-
     /**
      * The table associated with the model.
      *
@@ -45,9 +43,9 @@ class Exph_export_header extends Model
     protected $fillable = ['EXPH_CONTEXT', 'EXPH_OBJECT_TYPE', 'EXPH_ACTION_CODE', 'EXPH_EXTID', 'EXPH_REFERENCECURRENCY', 'EXPH_EXPORT_COUNT', 'EXPH_PROCESS_CODE', 'EXPH_CREATION_TIME', 'EXPH_PROCESS_TIME', 'EXPH_PROCESS_RETRIES'];
 
     /**
-     * Indicates if timestamp columns are present in the table
+     * Indicates if timestamp columns are present in the table.
      *
-     * @var boolean
+     * @var bool
      */
     public $timestamps = false;
 
@@ -68,7 +66,7 @@ class Exph_export_header extends Model
     ];
 
     /**
-     * Constructor function
+     * Constructor function.
      */
     public function __construct()
     {
@@ -96,10 +94,10 @@ class Exph_export_header extends Model
     }
 
     /**
-     * Scope a query to only include non imported routes
+     * Scope a query to only include non imported routes.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $code
+     * @param string                                $code
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -109,9 +107,10 @@ class Exph_export_header extends Model
     }
 
     /**
-     * Scope a query to only include non imported routes
+     * Scope a query to only include non imported routes.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeWhereNotImported(Builder $query)
@@ -120,10 +119,10 @@ class Exph_export_header extends Model
     }
 
     /**
-     * Scope a query to only include specific action types
+     * Scope a query to only include specific action types.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string|null $code
+     * @param string|null                           $code
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -137,10 +136,10 @@ class Exph_export_header extends Model
     }
 
     /**
-     * Scope a query to automaticly filter on reference
+     * Scope a query to automaticly filter on reference.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $id
+     * @param string                                $id
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */

@@ -1,17 +1,15 @@
 <?php
+
 namespace Noxxie\Ptv;
 
-use Noxxie\Ptv\Contracts\Route as RouteContract;
-use Noxxie\Ptv\Contracts\Order as OrderContract;
-use Noxxie\Ptv\Route;
-use Noxxie\Ptv\Order;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Collection;
+use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
+use Noxxie\Ptv\Contracts\Order as OrderContract;
+use Noxxie\Ptv\Contracts\Route as RouteContract;
 
 class PtvServiceProvider extends ServiceProvider
 {
-
     /**
      * Bootstrap any application services.
      *
@@ -46,7 +44,7 @@ class PtvServiceProvider extends ServiceProvider
             OrderContract::class,
             function ($app, array $parameters) {
                 if (count($parameters) == 0) {
-                    return new Order;
+                    return new Order();
                 } else {
                     if (!isset($parameters['attributes']) or !isset($parameters['type']) or !$parameters['attributes'] instanceof Collection) {
                         throw new InvalidArgumentException('Missing required parameters');
@@ -54,6 +52,7 @@ class PtvServiceProvider extends ServiceProvider
 
                     // The constructor function defines a outcome variable so we can check if the execution of a method succeeded
                     $order = new Order($parameters['type'], $parameters['attributes']);
+
                     return $order->outcome;
                 }
             }
@@ -67,13 +66,14 @@ class PtvServiceProvider extends ServiceProvider
             RouteContract::class,
             function ($app, array $parameters) {
                 if (count($parameters) == 0) {
-                    return new Route;
+                    return new Route();
                 } else {
                     if (!isset($parameters['id'])) {
                         throw new InvalidArgumentException('Missing required parameters');
                     }
 
-                    $class = new Route;
+                    $class = new Route();
+
                     return $class->get($parameters['id']);
                 }
             }

@@ -1,25 +1,26 @@
 <?php
+
 namespace Noxxie\Ptv\Traits;
 
-use Noxxie\Ptv\Models\Imph_import_header;
-use Noxxie\Ptv\Models\Iorh_order_header;
-use Noxxie\Ptv\Models\Iora_order_actionpoint;
-use Noxxie\Ptv\Helpers\GetUniqueId;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
+use Noxxie\Ptv\Helpers\GetUniqueId;
+use Noxxie\Ptv\Models\Imph_import_header;
+use Noxxie\Ptv\Models\Iora_order_actionpoint;
+use Noxxie\Ptv\Models\Iorh_order_header;
 
-trait defaultAttributes {
-
+trait defaultAttributes
+{
     /**
-     * Holds the unique ID that is needed for joining the import tables
+     * Holds the unique ID that is needed for joining the import tables.
      *
      * @var int
      */
     protected $unique_id;
 
     /**
-     * Set default attributes for each model using this trait
+     * Set default attributes for each model using this trait.
      *
      * @return void
      */
@@ -27,11 +28,9 @@ trait defaultAttributes {
     {
         $configData = config('ptv.defaults');
         if (count($configData) > 0) {
-            foreach(config('ptv.defaults') as $table => $columns)
-            {
+            foreach (config('ptv.defaults') as $table => $columns) {
                 if (count($columns) > 0) {
-                    foreach ($columns as $column => $data)
-                    {
+                    foreach ($columns as $column => $data) {
                         if ($friendly = $this->isFriendlyAttribute($column)) {
                             $this->attributes[$friendly->get('table')][$friendly->get('column')] = $data;
                         } else {
@@ -45,9 +44,10 @@ trait defaultAttributes {
     }
 
     /**
-     * Replace the place holder data with actuall data
+     * Replace the place holder data with actuall data.
      *
      * @param string $data
+     *
      * @return void
      */
     protected function fillPlaceHolderData(string $data)
@@ -76,9 +76,10 @@ trait defaultAttributes {
     }
 
     /**
-     * Check if the given parameter is a column attribute
+     * Check if the given parameter is a column attribute.
      *
      * @param string $column
+     *
      * @return bool
      */
     protected function isColumnAttribute(string $column)
@@ -91,8 +92,8 @@ trait defaultAttributes {
             foreach ($columns as $columnName) {
                 if ($column == $columnName) {
                     return new Collection([
-                        'table' => $table,
-                        'column' => $columnName
+                        'table'  => $table,
+                        'column' => $columnName,
                     ]);
                 }
             }
@@ -102,19 +103,19 @@ trait defaultAttributes {
     }
 
     /**
-     * Fill the column variable with all availible columns from every table needed
+     * Fill the column variable with all availible columns from every table needed.
      *
      * @return void
      */
     protected function fillColumnsVariable()
     {
-        $tableName = (new Imph_import_header)->getTable();
+        $tableName = (new Imph_import_header())->getTable();
         $this->columns[$tableName] = Schema::connection(config('ptv.connection'))->getColumnListing($tableName);
 
-        $tableName = (new Iorh_order_header)->getTable();
+        $tableName = (new Iorh_order_header())->getTable();
         $this->columns[$tableName] = Schema::connection(config('ptv.connection'))->getColumnListing($tableName);
 
-        $tableName = (new Iora_order_actionpoint)->getTable();
+        $tableName = (new Iora_order_actionpoint())->getTable();
         $this->columns[$tableName] = Schema::connection(config('ptv.connection'))->getColumnListing($tableName);
     }
 }

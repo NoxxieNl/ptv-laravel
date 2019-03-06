@@ -19,7 +19,7 @@ return [
 
         'IMPH_IMPORT_HEADER' => [
             'reference' => 'IMPH_EXTID',
-            'action' => 'IMPH_ACTION_CODE'
+            'action'    => 'IMPH_ACTION_CODE',
         ],
 
         'IORH_ORDER_HEADER' => [
@@ -27,14 +27,14 @@ return [
         ],
 
         'IORA_ORDER_ACTIONPOINT' => [
-            'postcode' => 'IORA_POSTCODE',
-            'city' => 'IORA_CITY',
-            'country' => 'IORA_COUNTRY',
-            'street' => 'IORA_STREET',
-            'houseno' => 'IORA_HOUSENO',
+            'postcode'   => 'IORA_POSTCODE',
+            'city'       => 'IORA_CITY',
+            'country'    => 'IORA_COUNTRY',
+            'street'     => 'IORA_STREET',
+            'houseno'    => 'IORA_HOUSENO',
             'timewindow' => 'IORA_HANDLINGTIME_CLASS',
-            'from' => 'IORA_EARLIEST_DATETIME',
-            'till' => 'IORA_LATEST_DATETIME'
+            'from'       => 'IORA_EARLIEST_DATETIME',
+            'till'       => 'IORA_LATEST_DATETIME',
         ],
     ],
 
@@ -51,12 +51,12 @@ return [
         */
 
         'IMPH_IMPORT_HEADER' => [
-            'IMPH_REFERENCE' => '%UNIQUE_ID%',
-            'IMPH_CONTEXT' => '1',
-            'IMPH_OBJECT_TYPE' => 'ORDER',
-            'IMPH_ACTION_CODE' => 'NEW',
-            'IMPH_PROCESS_CODE' => '10',
-            'IMPH_CREATION_TIME' => '%CURRENT_DATE%'
+            'IMPH_REFERENCE'     => '%UNIQUE_ID%',
+            'IMPH_CONTEXT'       => '1',
+            'IMPH_OBJECT_TYPE'   => 'ORDER',
+            'IMPH_ACTION_CODE'   => 'NEW',
+            'IMPH_PROCESS_CODE'  => '10',
+            'IMPH_CREATION_TIME' => '%CURRENT_DATE%',
         ],
 
         /*
@@ -64,11 +64,11 @@ return [
         */
 
         'IORH_ORDER_HEADER' => [
-            'IORH_IMPH_REFERENCE' => '%UNIQUE_ID%',
-            'IORH_ORDER_TYPE' => 'DELIVERY',
+            'IORH_IMPH_REFERENCE'  => '%UNIQUE_ID%',
+            'IORH_ORDER_TYPE'      => 'DELIVERY',
             'IORH_CODRIVER_NEEDED' => '0',
-            'IORH_SOLO' => '0',
-            'IORH_PRIORITY' => '1'
+            'IORH_SOLO'            => '0',
+            'IORH_PRIORITY'        => '1',
         ],
 
         /*
@@ -76,12 +76,12 @@ return [
         */
 
         'IORA_ORDER_ACTIONPOINT' => [
-            'IORA_IMPH_REFERENCE' => '%UNIQUE_ID%',
-            'IORA_EXTID1' => '%UNIQUE_IORA_ID%',
-            'IORA_ACTION' => 'DELIVERY',
-            'IORA_IS_ONETIME' => '1',
+            'IORA_IMPH_REFERENCE'  => '%UNIQUE_ID%',
+            'IORA_EXTID1'          => '%UNIQUE_IORA_ID%',
+            'IORA_ACTION'          => 'DELIVERY',
+            'IORA_IS_ONETIME'      => '1',
             'IORA_CODRIVER_NEEDED' => '0',
-            'IORA_TOUR_POS' => 'NONE'
-        ]
-    ]
+            'IORA_TOUR_POS'        => 'NONE',
+        ],
+    ],
 ];
