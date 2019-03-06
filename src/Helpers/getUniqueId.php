@@ -3,7 +3,7 @@ namespace Noxxie\Ptv\Helpers;
 
 use Noxxie\Ptv\Models\Imph_import_header;
 
-class getUniqueId
+class GetUniqueId
 {
     /**
      * Generate a unique ID that can be inserted in to the PTV database

@@ -3,15 +3,12 @@
 namespace Noxxie\Ptv\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
 use Noxxie\Ptv\Models\Imph_import_header;
-
-use Noxxie\Ptv\Traits\defaultAttributes;
 use Watson\Validating\ValidatingTrait;
 
 class Iorh_order_header extends Model
 {
-    use ValidatingTrait, defaultAttributes;
+    use ValidatingTrait;
 
     /**
      * The connection name for the model.
@@ -31,9 +28,6 @@ class Iorh_order_header extends Model
         // Correct the rules settings
         $this->rules['IORH_IMPH_REFERENCE'] = str_replace('ptv.', config('ptv.connection') . '.', $this->rules['IORH_IMPH_REFERENCE']);
 
-        // Set default attributes from config
-        $this->setDefaultAttributes();
-
         // Allow parent to do his work
         parent::__construct();
     }
@@ -41,7 +35,7 @@ class Iorh_order_header extends Model
     /**
      * Validation rules for validation the specified information
      * if any of the data is not valid the model will not insert the record
-     * 
+     *
      * @var array
      */
     protected $rules = [
@@ -172,28 +166,28 @@ class Iorh_order_header extends Model
 
     /**
      * The table associated with the model.
-     * 
+     *
      * @var string
      */
     protected $table = 'IORH_ORDER_HEADER';
 
     /**
      * The primary key for the model.
-     * 
+     *
      * @var string
      */
     protected $primaryKey = 'IORH_IMPH_REFERENCE';
 
     /**
      * The "type" of the auto-incrementing ID.
-     * 
+     *
      * @var string
      */
     protected $keyType = 'float';
 
     /**
      * Indicates if the IDs are auto-incrementing.
-     * 
+     *
      * @var bool
      */
     public $incrementing = false;
@@ -206,9 +200,11 @@ class Iorh_order_header extends Model
     public $timestamps = false;
 
     /**
+     * The attributes that aren't mass assignable.
+     *
      * @var array
      */
-    protected $fillable = ['IORH_ORDER_TYPE', 'IORH_EXTID2', 'IORH_CUSTOMER_ORDER_EXTID', 'IORH_NOTE', 'IORH_ASSORTMENT', 'IORH_CUSTOMER', 'IORH_CONSIGNMENT_EXTID', 'IORH_LOGISTIC_EXTID', 'IORH_PRECOMBINED_TOUR', 'IORH_PREASSIGNED_TRUCK', 'IORH_VEHICLEREQUIREMENTS', 'IORH_PRIORITY', 'IORH_CODRIVER_NEEDED', 'IORH_TRANSPORTPERIOD', 'IORH_SOLO', 'IORH_WEIGHT', 'IORH_VOLUME', 'IORH_LOADMETER', 'IORH_QUANTITY_1', 'IORH_QUANTITY_2', 'IORH_QUANTITY_3', 'IORH_QUANTITY_4', 'IORH_QUANTITY_5', 'IORH_QUANTITY_6', 'IORH_QUANTITY_7', 'IORH_LENGTH', 'IORH_WIDTH', 'IORH_HEIGHT', 'IORH_NUM_1', 'IORH_NUM_2', 'IORH_NUM_3', 'IORH_NUM_4', 'IORH_NUM_5', 'IORH_NUM_6', 'IORH_NUM_7', 'IORH_NUM_8', 'IORH_NUM_9', 'IORH_NUM_10', 'IORH_TEXT_1', 'IORH_TEXT_2', 'IORH_TEXT_3', 'IORH_TEXT_4', 'IORH_TEXT_5', 'IORH_TEXT_6', 'IORH_TEXT_7', 'IORH_TEXT_8', 'IORH_TEXT_9', 'IORH_TEXT_10', 'IORH_TASKFIELDS', 'IORH_ALTERNATIVE_DEPOTS', 'IORH_PICKUP_EXTID1', 'IORH_PICKUP_EARLIEST_DATETIME', 'IORH_PICKUP_LATEST_DATETIME', 'IORH_DELVRY_EXTID1', 'IORH_DELVRY_EARLIEST_DATETIME', 'IORH_DELVRY_LATEST_DATETIME'];
+    protected $guarded  = [];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -1,307 +1,150 @@
-# Connect your PTV application with Laravel
+# PTV-Laravel
 
-This package allows you to manage the import and export from data from and to the `transfer database` of an PTV application. This package uses the transferDB option within PTV to transfer data to and from PTV. Other options are NOT supported within this package.
-
-Once installed you get access to following options:
-
-> ````php
-> // Add order to PTV
-> new AddOrder($data);
-> 
-> // Update order to PTV
-> new UpdateOrder($data);
->
-> // Delete order in PTV
-> new DeleteOrder($data);
-> ````
-
-You can also easily get exported routes from the PTV application using the functions:
-
-> ````php
-> // Fetch specific route
-> $route = (new GetRoute())->fetch($id);
->
-> // Fetch exports that are not imported
-> $route = (new GetRoute())->getNotImported();
-> ````
+This package allows you to manage the import and export from data from and to the `transfer database` of an PTV application. This package uses the transferDB option within PTV to transfer data to and from PTV.
 
 ## Installation
 
-This package can be used in Laravel 5.4 or higher. Lower versions are currently not supported.
+This package can be used in Laravel 5.4 or higher.  Older versions are currently not supported.
+You can install the package via composer:
 
-You can install the package via composer, add the following to your composer.json:
->````json
->"repositories": [
->        {
->           "type": "vcs",
->            "url":  "git@gitlab.com:Bosveld/ptv-laravel.git"
->        }
->    ],
->
->````
+`composer require noxxie/ptv-laravel`
 
-And in your require tag of the composer.json file:
+The service provider will automatically get registered. Or you may manually add the service provider in your  `config/app.php`file:
 
->````json
->"Bosveld/ptv-laravel": "dev-master"
->````
-
-You can publish the config file like:
->``php artisan vendor:publish --provider="Noxxie\Ptv\PtvServiceProvider" --tag="config"``
-
-When published, the config/ptv.php config file contains:
 ````php
-return [
-
-    /**
-     * When the PTV library is used a seperate connection must be made to the PTV database
-     * The database can be se specified within the config/database.php file the database connection name must be
-     * specificied here. Default is "ptv", but as always you are free to change this to anything you want
-     */
-
-    'connection' => 'ptv',
-
-    /**
-     * The friendly naming config setting allows you to configure easier naming for specific columns in a specific table
-     * this function can be helpfull when writing a import and you need to know what you are importing. With the original
-     * column names of PTV that can be tricky.
-     * 
-     * Remember: for the classes "addOrder", "updateOrder", "deleteOrder" when you need to set a a value for a specific column
-     * you can always use the originel column name, the class will figure it out that you want to set that specific column
-     * 
-     * When friendly names are specified the class expects that those values are used and not the original names
-     */
-
-    'friendly_naming' => [
-        
-        'IMPH_IMPORT_HEADER' => [
-            'IMPH_REFERENCE' => 'id',
-            'IMPH_EXTID' => 'reference'
-        ],
-
-        'IORH_ORDER_HEADER' => [
-            'IORH_IMPH_REFERENCE' => 'id',
-            'IORH_PRIORITY' => 'priority'
-        ],
-
-        'IORA_ORDER_ACTIONPOINT' => [
-            'IORA_IMPH_REFERENCE' => 'id',
-            'IORA_POSTCODE' => 'postcode',
-            'IORA_CITY' => 'city',
-            'IORA_COUNTRY' => 'country',
-            'IORA_STREET' => 'street',
-            'IORA_HOUSENO' => 'houseno',
-            'IORA_HANDLINGTIME_CLASS' => 'timewindow',
-            'IORA_EARLIEST_DATETIME' => 'from',
-            'IORA_LATEST_DATETIME' => 'till'
-        ],
-    ],
-
-    /**
-     * The defaults settings are settings you can use to set default values for column data some have been already filled
-     * for you as they are mendatory to be filled on insert. There is NO check if the fields do exist in de databse. 
-     * Do NOT edit this if you are not 100% sure what you are doing
-     */
-
-    'defaults' => [
-
-        /**
-         * Default settings for the table IMPH_IMPORT_HEADER
-         */
-        
-        'IMPH_IMPORT_HEADER' => [
-            'IMPH_CONTEXT' => '1',
-            'IMPH_OBJECT_TYPE' => 'ORDER',
-            'IMPH_ACTION_CODE' => 'NEW',
-            'IMPH_PROCESS_CODE' => '10',
-            'IMPH_CREATION_TIME' => '%CURRENT_DATE%'
-        ],
-
-        /**
-         * Default settings for the table IORH_ORDER_HEADER
-         */
-
-        'IORH_ORDER_HEADER' => [
-            'IORH_ORDER_TYPE' => 'DELIVERY',
-            'IORH_CODRIVER_NEEDED' => '0',
-            'IORH_SOLO' => '0',
-            'IORH_PRIORITY' => '1'
-        ],
-
-        /**
-         * Default settings for the table IORA_ORDER_ACTIONPOINT
-         */
-
-        'IORA_ORDER_ACTIONPOINT' => [
-            'IORA_ACTION' => 'DELIVERY',
-            'IORA_IS_ONETIME' => '1',
-            'IORA_CODRIVER_NEEDED' => '0',
-            'IORA_TOUR_POS' => 'NONE'
-        ]
-    ]
+'providers' => [
+	 // ...
+	 Noxxie\Ptv\PtvServiceProvider::class,
 ];
 ````
 
-The connection setting is important in this configuration. To allow this package to work correctly you need to add a extra database connection within your ``config/database.php`` file that matches your connection settings to the PTV transfer database.
+You can publish the config file with:
+`php artisan vendor:publish --provider="Noxxie\Ptv\PtvServiceProvider" --tag="config"`
 
-By Default the ptv config files searches for a database connection with the name ``ptv`` but as always you are free to change it to everything you want.
+With the publication of the config file you change allot of default values as well add additional values to fit your needs. Reed the **config** for more information regarding configuration this package.
 
-# Usage
+## Configuration
+When the configuration file is published you can configure allot of settings using the configuration file.
 
+`connection`, With this option you can specify what connection name this package needs to use in order to connect to your PTV transfer database. And so its *important* that you specify a extra databsae connection in your `config/database.php` file. By default this package will search for a connection with the name `ptv`.
 
-Every action you want to do with the PTV application has his own class and thus you need to add a different class.
+Example of a database connection:
+````php
+...
+'ptv'  =>  [
+	'driver'  			=>  'sqlsrv',
+	'host'  			=>  '',
+	'port'  			=>  '1433',
+	'database'  		=>  '',
+	'username'  		=>  '',
+	'password'  		=>  '',
+	'charset'  			=>  'utf8',
+	'prefix'			=>  '',
+	'prefix_indexes'  	=>  true,
+],
+...
+````
+`friendly_naming`, This option allows you to use easier naming when writing imports for an order. I personally am always confused with what column name was used for which action and in what table it was stored.  With the friendly naming option you can "translate" the column names to a easier to remember name.
 
-## Orders
-
-Orders are the main way to add new data into PTV.
-
-### Add order
-
-within your controller first add:
->````
->use Noxxie\Ptv\AddOrder;
->use Noxxie\Ptv\Helpers\getUniqueId;
->````
-
-After that you have full access to the add order functionality within PTV. The helper ``getUniqueId`` helps you that you always insert a uniqueID into the database (This ID is only used to import data). Basic example for add a order:
+By default this package comes with pre configured easy naming options. For example when importing an order I wanted a easier naming for the address data so it made more sense for me:
 
 ````php
-$data = collect([
-    'id' => getUniqueId::generate(),
-    'reference' => '12345678',
-    'priority' => 1,
-    'postcode' => '4761NV',
-    'city' => 'zevenbergen',
-    'street' => 'twintighoven',
-    'houseno' => '41',
-    'country' => 'NL',
-    'timewindow' => '501',
-    'from' => '20181222',
-    'till' => '20181231'
-]);
-
-$add = new AddOrder();
-
-if (!$add->create($collect)) {
-    dd($add->getErrors()); 
-}
-else {
-    $add->save();
-}
+'IORA_ORDER_ACTIONPOINT'  =>  [
+	'postcode'  	=>  'IORA_POSTCODE',
+	'city'  		=>  'IORA_CITY',
+	'country'  		=>  'IORA_COUNTRY',
+	'street'  		=>  'IORA_STREET',
+	'houseno'  		=>  'IORA_HOUSENO',
+	'timewindow'  	=>  'IORA_HANDLINGTIME_CLASS',
+	'from'  		=>  'IORA_EARLIEST_DATETIME',
+	'till'  		=>  'IORA_LATEST_DATETIME'
+],
 ````
 
-Within your data array you can also specify the reall column name of data you want to insert. For example if you want to insert ``IORH_NUM_1`` you can do so by adding it to the array:
+Now with the above set in `friendly_naming` the package will automatically convert all the attributes to there correct column name.
+
+`Defaults`, With this option you can set default values that are always required when you import an order but actually they never change when you want to create a new order. Instead of defining them with each import you can define them once inside the configuration class and they will be automatically injected in to your new order when you create one.
+
+Please note that the default options are the first once to be set when you create a new order, and so you can overwrite every default option when you create a new order.
+
+Also with the default option you can use `placeholders` that are replaced with data when you create an order. The following are available:
+
+- `%UNIQUE_ID%`, will be replaced by a unique ID that is not used within the transfer database
+- `%CURRENT_DATE%`, will be replaced by the current date (format Ymd)
+- `UNIQUE_IORA_ID%`, will be replaced by a unique ID that is used for creating new order locations within PTV
+
+If you are **NOT** sure how to deal with this options with regard to the transfer database from PTV do **NOT** change the placeholders that are already in place by default within this package.
+
+## Usage
+This package can be used in different ways how to access the `order` or `route` instance. 
+ 
+### Dependency injection
+You can access one by dependency injection provided by Laravel:
 
 ````php
-$data = collect([
-    'id' => getUniqueId::generate(),
-    'reference' => '12345678',
-    'priority' => 1,
-    'postcode' => '4761NV',
-    'city' => 'zevenbergen',
-    'street' => 'twintighoven',
-    'houseno' => '41',
-    'country' => 'NL',
-    'timewindow' => '501',
-    'from' => '20181222',
-    'till' => '20181231',
-    'IORH_NUM_1' => 20
-]);
-````
+<?php
+...
+use Noxxie\Ptv\Order;
+use Noxxie\Ptv\Route;
 
-The class will figure out for you that you want to add that custom value to that specific order.
+...
 
-**Note**: if you always want to add a extra value to the orders you can always add a friendly name in your ptv configuration (see install chapter for more information).
+public function mockup(Route $route) {
+	$order->create(...);
+}
 
-### Update order
-
-within your controller first add:
->````
->use Noxxie\Ptv\UpdateOrder;
->use Noxxie\Ptv\Helpers\getUniqueId;
->````
-
-After that you have full access to the update mechanism. The update mechanism works the same as the ``AddOrder`` class and has the same functionality. However, PTV transfer databse works when you use ``AddOrder`` with the same ``reference`` it will assume you want to do an update. 
-
-The helper ``getUniqueId`` helps you that you always insert a uniqueID into the database (This ID is only used to import data).
-
-To be sure you always add / update the correct data the best practice is to use ``AddOrder`` when adding a new order and to use ``UpdateOrder`` when updating an order.
-
-PTV will give a error message when you want to update an order that does not exist. It will **NOT** throw an error when you want to update an existing order using ``AddOrder`` it will just add the order in PTV.
-
-### Delete order
-
-within your controller first add:
->````
->use Noxxie\Ptv\DeleteOrder;
->use Noxxie\Ptv\Helpers\getUniqueId;
->````
-
-Afther that you have access to delete order programming. The helper ``getUniqueId`` helps you that you always insert a uniqueID into the database (This ID is only used to import data). An example of how to use this class:
-
-````php
-$data = collect([
-    'id' => getUniqueId::generate(),
-    'reference' => '12345678'
-]);
-
-$delete = new DeleteOrder();
-if (!$delete->create($data)) {
-    dd($delete->getErrors());
-} else {
-    $delete->save();
+public function mockup_order(Order $order) {
+	$route->getNotImported();
 }
 ````
+When you use the dependency injection option you will have an instance of the `route` or `order` object. And so you can directly use the functionality provided by that class.
 
-The delete class only needs to statements to work, an unique ID and the reference of the order you want to delete. Custom attributes are not needed within this class and thus are not supported.
-
-## Routes
-
-The route functionality add the capability to get information of routes that are exported from within the PTV application and reads the required data in to a ``collection``.
-
-Because of the way how the export system works within PTV you only need one classes added within your controller:
-
->``
->use Noxxie\Ptv\GetRoute;
->``
-
-After that you have access to a couple of functions how to retrieve routes from the database.
-
-### getNotImported
-
-With the ``getNotImported`` functionality you can retrieve all the exported data from PTV that is not imported in to your application or where you havent defined it as imported.
-
-An example:
+### Resolving it from the service container
+You can resolve the instances from the service container using:
 ````php
-$route = (new GetRoute())->getNotImported();
+$route = App()->Make('Noxxie\Ptv\Route');
+$order = App()->Make('Noxxie\Ptv\Order');
 ````
 
-When no routes are found ``null`` is returned. When there is data a ``collection`` is returned.
+When you want to create a new order within PTV you can also resolve the instance from the service container and execute a functionality at once. For example: you want to create a new order within PTV you can resolve and execute a order at once:
 
-You can add a parameter what action type you want to fetch. (``NEW``, ``UPDATE`` or ``DELETE``).
+````php
+$order = App()->MakeWith('Noxxie\Ptv\Order', [
+	'type' => 'CREATE',
+	'attributes' => ...)
+];
+````
 
-### fetch
+The same applies for resolving a route from the service container. However the functionality is limited to fetch one route from the database.
 
-You can also fetch a specified route number. This will return all the information regarding that specific route. If the specified route has more then one export all the exports will be returned.
+````php
+$route= App()->MakeWith('Noxxie\Ptv\Route', [
+	'id' => 123456
+];
+````
 
-The prefix for the routes are not enterd within this function and only the numeric value of the routenumbers are needed to find the information regarding the route.
+### Old fashion
+Of course you can also use the old fashioned way and just create the class manually:
+````php
+<?php
+...
+use Noxxie\Ptv\Route;
+use Noxxie\Ptv\Order;
 
-When the route is notfound ``null`` is returned. When there is data a ``collection`` is returned.
+...
 
-Example:
-```php
-$route = (new GetRoute())->fetch(3885));
-```
+public function mockup() {
+	$Order = new Order();
+	$Route = new Route();
+}
+````
 
-### updateRouteAsImported
-When you are done importing a route into your application you can use the function ``updateRouteAsImported`` to mark the route as imported within the PTV database.
+## What's next?
 
-This makes sures when you call the ``getNotImported`` functionality you will not get the routes that are already imported in to your application.
+Go use this package to create a awesome import to your PTV application. This package was created purely for the usage of my own project I am/was working on. However you are free to use this in any way you want to use it.
 
-Example:
+For more detailed examples and documentation look in the docs folder to get details about the [order](order/readme.md) and `route` instances and what they can to exactly.
 
-```php
-    $route = (new GetRoute())->updateRouteAsImported(3885);
-```
+## License
 
-This function will return ``true`` on succesfull update and ``false`` if anything did go wrong.
+The MIT License (MIT).

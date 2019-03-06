@@ -3,15 +3,12 @@
 namespace Noxxie\Ptv\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
 use Noxxie\Ptv\Models\Imph_import_header;
-
-use Noxxie\Ptv\Traits\defaultAttributes;
 use Watson\Validating\ValidatingTrait;
 
 class Iora_order_actionpoint extends Model
 {
-    use ValidatingTrait, defaultAttributes;
+    use ValidatingTrait;
 
     /**
      * The connection name for the model.
@@ -31,9 +28,6 @@ class Iora_order_actionpoint extends Model
         // Correct the rules settings
         $this->rules['IORA_IMPH_REFERENCE'] = str_replace('ptv.', config('ptv.connection') . '.', $this->rules['IORA_IMPH_REFERENCE']);
 
-        // Set default attributes from config
-        $this->setDefaultAttributes();
-
         // Allow parent to do his work
         parent::__construct();
     }
@@ -41,7 +35,7 @@ class Iora_order_actionpoint extends Model
     /**
      * Validation rules for validation the specified information
      * if any of the data is not valid the model will not insert the record
-     * 
+     *
      * @var array
      */
     protected $rules = [
@@ -83,7 +77,7 @@ class Iora_order_actionpoint extends Model
         'IORA_PHONE' => 'string|max:50',
         'IORA_EMAIL' => 'string|max:255',
     ];
-    
+
     /**
      * Because of how the validator works all the error messages returned the :attribute field would put in spaces
      * afther every letter, we dont want that, so we specify each field what name it must be
@@ -132,7 +126,7 @@ class Iora_order_actionpoint extends Model
 
     /**
      * The table associated with the model.
-     * 
+     *
      * @var string
      */
     protected $table = 'IORA_ORDER_ACTIONPOINT';
@@ -145,9 +139,11 @@ class Iora_order_actionpoint extends Model
     public $timestamps = false;
 
     /**
+     * The attributes that aren't mass assignable.
+     *
      * @var array
      */
-    protected $fillable = ['IORA_EXTID1', 'IORA_EXTID2', 'IORA_IS_ONETIME', 'IORA_NAME', 'IORA_DESC', 'IORA_SHORTDESC', 'IORA_COUNTRY', 'IORA_STATE', 'IORA_POSTCODE', 'IORA_CITY', 'IORA_DISTRICT', 'IORA_STREET', 'IORA_HOUSENO', 'IORA_LATITUDE', 'IORA_LONGITUDE', 'IORA_COORD_TYPE', 'IORA_EARLIEST_DATETIME', 'IORA_LATEST_DATETIME', 'IORA_SERVICEPERIODEXTERNAL', 'IORA_OH_TOLERANCE_CLASS', 'IORA_HANDLINGTIME_CLASS', 'IORA_HANDLINGTIME_ADDITIONAL', 'IORA_PRECOMBINED_TOUR_SEQUENCE', 'IORA_TOUR_POS', 'IORA_SERVICE_IN_INTERVAL', 'IORA_CUSTOMER_INDICATOR', 'IORA_CUSTOMER_GROUP', 'IORA_NOTRAILER', 'IORA_CODRIVER_NEEDED', 'IORA_VEHICLEREQUIREMENTS', 'IORA_MIN_VEHICLE_GROUP', 'IORA_MAX_VEHICLE_GROUP', 'IORA_ADDITIONAL_VEHICLE_GROUP', 'IORA_PHONE', 'IORA_EMAIL'];
+    protected $guarded  = [];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

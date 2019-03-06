@@ -10,31 +10,31 @@ use Noxxie\Ptv\Models\Etpt_tour_header;
 
 class Exph_export_header extends Model
 {
-    
+
     /**
      * The table associated with the model.
-     * 
+     *
      * @var string
      */
     protected $table = 'EXPH_EXPORT_HEADER';
 
     /**
      * The primary key for the model.
-     * 
+     *
      * @var string
      */
     protected $primaryKey = 'EXPH_REFERENCE';
 
     /**
      * The "type" of the auto-incrementing ID.
-     * 
+     *
      * @var string
      */
     protected $keyType = 'float';
 
     /**
      * Indicates if the IDs are auto-incrementing.
-     * 
+     *
      * @var bool
      */
     public $incrementing = false;
@@ -43,7 +43,7 @@ class Exph_export_header extends Model
      * @var array
      */
     protected $fillable = ['EXPH_CONTEXT', 'EXPH_OBJECT_TYPE', 'EXPH_ACTION_CODE', 'EXPH_EXTID', 'EXPH_REFERENCECURRENCY', 'EXPH_EXPORT_COUNT', 'EXPH_PROCESS_CODE', 'EXPH_CREATION_TIME', 'EXPH_PROCESS_TIME', 'EXPH_PROCESS_RETRIES'];
-    
+
     /**
      * Indicates if timestamp columns are present in the table
      *
@@ -100,7 +100,7 @@ class Exph_export_header extends Model
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param string $code
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeWithProcessCode(Builder $query, string $code)
@@ -114,7 +114,7 @@ class Exph_export_header extends Model
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeNotImported(Builder $query)
+    public function scopeWhereNotImported(Builder $query)
     {
         return $this->scopeWithProcessCode($query, '20');
     }
@@ -123,12 +123,29 @@ class Exph_export_header extends Model
      * Scope a query to only include specific action types
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $code
-     * 
+     * @param string|null $code
+     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeWithAction(Builder $query, string $type)
+    public function scopeWhereAction(Builder $query, ?string $type)
     {
+        if (is_null($type)) {
+            return $query;
+        }
+
         return $query->where('EXPH_ACTION_CODE', strtoupper($type));
+    }
+
+    /**
+     * Scope a query to automaticly filter on reference
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $id
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWhereReference(Builder $query, string $id)
+    {
+        return $query->where('EXPH_EXTID', $id);
     }
 }
