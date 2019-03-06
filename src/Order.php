@@ -1,22 +1,24 @@
 <?php
+
 namespace Noxxie\Ptv;
-use Noxxie\Ptv\Contracts\Order as DefaultOrderContract;
+
+use BadMethodCallException;
 use Illuminate\Support\Collection;
-use Noxxie\Ptv\Models\Imph_import_header;
-use Noxxie\Ptv\Models\Iorh_order_header;
-use Noxxie\Ptv\Models\Iora_order_actionpoint;
-use Noxxie\Ptv\Traits\defaultAttributes;
-use Noxxie\Ptv\Traits\friendlyAttributes;
+use Noxxie\Ptv\Contracts\Order as DefaultOrderContract;
 use Noxxie\Ptv\Exceptions\InvalidAttributeException;
 use Noxxie\Ptv\Exceptions\ModelValidationException;
-use \BadMethodCallException;
+use Noxxie\Ptv\Models\Imph_import_header;
+use Noxxie\Ptv\Models\Iora_order_actionpoint;
+use Noxxie\Ptv\Models\Iorh_order_header;
+use Noxxie\Ptv\Traits\defaultAttributes;
+use Noxxie\Ptv\Traits\friendlyAttributes;
 
 class Order implements DefaultOrderContract
 {
     use defaultAttributes, friendlyAttributes;
 
     /**
-     * Contain all the attributes that are used to create this order
+     * Contain all the attributes that are used to create this order.
      *
      * @var array
      */
@@ -24,12 +26,13 @@ class Order implements DefaultOrderContract
 
     /**
      * When the user resolves the class from the service container we allow that it can be resolved
-     * and execute a create, update or delete statement
+     * and execute a create, update or delete statement.
      *
-     * @param string $type
+     * @param string                         $type
      * @param \Illuminate\Support\Collection $attributes
      */
-    public function __construct(string $type = null, Collection $attributes = null) {
+    public function __construct(string $type = null, Collection $attributes = null)
+    {
         if (is_null($type) or is_null($attributes)) {
             return;
         }
@@ -44,9 +47,10 @@ class Order implements DefaultOrderContract
     }
 
     /**
-     * Create a new order in the PTV database
+     * Create a new order in the PTV database.
      *
      * @param \Illuminate\Support\Collection $attributes
+     *
      * @return bool
      */
     public function create(Collection $attributes)
@@ -56,23 +60,25 @@ class Order implements DefaultOrderContract
 
         // Insert the import header
         $header = (new Imph_import_header())->fill($this->attributes['IMPH_IMPORT_HEADER']);
-        if (! $header->save()) {
+        if (!$header->save()) {
             throw new ModelValidationException($header->GetErrors());
         }
 
         // Insert the order header
         $orderHeader = (new Iorh_order_header())->fill($this->attributes['IORH_ORDER_HEADER']);
-        if (! $orderHeader->save()) {
+        if (!$orderHeader->save()) {
             // Destroy the import_header record, if we do the database will remove the rest of the import data (cascading)
             Imph_Import_header::destroy($this->attributes['IMPH_IMPORT_HEADER']['IMPH_REFERENCE']);
+
             throw new ModelValidationException($orderHeader->getErrors());
         }
 
         // Inser the order actionpoint
         $orderActionpoint = (new Iora_order_actionpoint())->fill($this->attributes['IORA_ORDER_ACTIONPOINT']);
-        if (! $orderActionpoint->save()) {
+        if (!$orderActionpoint->save()) {
             // Destroy the import_header record, if we do the database will remove the rest of the import data (cascading)
             Imph_Import_header::destroy($this->attributes['IMPH_IMPORT_HEADER']['IMPH_REFERENCE']);
+
             throw new ModelValidationException(($orderActionpoint->getErrors()));
         }
 
@@ -84,9 +90,10 @@ class Order implements DefaultOrderContract
     }
 
     /**
-     * Update an existing order in PTV
+     * Update an existing order in PTV.
      *
      * @param \Illuminate\Support\Collection $attributes
+     *
      * @return bool
      */
     public function update(Collection $attributes)
@@ -99,9 +106,10 @@ class Order implements DefaultOrderContract
     }
 
     /**
-     * Delete an existing order in PTV
+     * Delete an existing order in PTV.
      *
      * @param \Illuminate\Support\Collection $attributes
+     *
      * @return bool
      */
     public function delete(Collection $attributes)
@@ -114,7 +122,7 @@ class Order implements DefaultOrderContract
 
         // Insert the import header
         $header = (new Imph_import_header())->fill($this->attributes['IMPH_IMPORT_HEADER']);
-        if (! $header->save()) {
+        if (!$header->save()) {
             throw new ModelValidationException($header->GetErrors());
         }
 
@@ -126,9 +134,10 @@ class Order implements DefaultOrderContract
     }
 
     /**
-     * Main method to fill the attributes variable with correct data
+     * Main method to fill the attributes variable with correct data.
      *
      * @param \Illuminate\Support\Collection $attributes
+     *
      * @return void
      */
     protected function fillAttributes(Collection $attributes)
@@ -136,8 +145,7 @@ class Order implements DefaultOrderContract
         // First fill up the attributes array with default values specified in the config
         $this->fillWithDefaultAttributes();
 
-        foreach ($attributes as $column => $data)
-        {
+        foreach ($attributes as $column => $data) {
             // Check if it is a friendly naming if so convert it to the normal name
             if ($friendly = $this->isFriendlyAttribute($column)) {
                 $this->attributes[$friendly->get('table')][$friendly->get('column')] = $data;
