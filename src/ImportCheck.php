@@ -15,10 +15,10 @@ class ImportCheck
     protected static $callback = [
         'failed'  => [],
         'success' => [],
-        'once' => [
+        'once'    => [
             'failed'  => [],
             'success' => [],
-        ]
+        ],
     ];
 
     /**

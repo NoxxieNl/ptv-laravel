@@ -8,7 +8,6 @@ use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
 use Noxxie\Ptv\Contracts\Order as OrderContract;
 use Noxxie\Ptv\Contracts\Route as RouteContract;
-use Noxxie\Ptv\ImportCheck;
 
 class PtvServiceProvider extends ServiceProvider
 {
