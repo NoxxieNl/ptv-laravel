@@ -15,6 +15,10 @@ class ImportCheck
     protected static $callback = [
         'failed'  => [],
         'success' => [],
+        'once' => [
+            'failed' => [],
+            'success' => []
+        ]
     ];
 
     /**
@@ -29,30 +33,60 @@ class ImportCheck
             return;
         }
 
-        // Loop every not checked model
-        foreach ($notCheckedImports as $importModel) {
-            // Failed import
-            if ($importModel->IMPH_PROCESS_CODE == '-30') {
-                // Check if there are any callback registed and if so execute the code
-                if (count(self::$callback['failed']) > 0) {
-                    foreach (self::$callback['failed'] as $callback) {
-                        // The model is send tho the callback function
-                        call_user_func_array($callback, [$importModel]);
+        // Loop every not checked model, only loop it when there is a actuall callback registerd
+        if (count(self::$callback['failed']) > 0 or count(self::$callback['success']) > 0) {
+            foreach ($notCheckedImports as $importModel) {
+                // Failed import
+                if ($importModel->IMPH_PROCESS_CODE == '-30') {
+                    // Check if there are any callback registed and if so execute the code
+                    if (count(self::$callback['failed']) > 0) {
+                        foreach (self::$callback['failed'] as $callback) {
+                            // The model is send tho the callback function
+                            call_user_func_array($callback, [$importModel]);
+                        }
+                    }
+                } else {
+                    // Check if there are any callback registed and if so execute the code
+                    if (count(self::$callback['success']) > 0) {
+                        foreach (self::$callback['success'] as $callback) {
+                            // The model is send tho the callback function
+                            call_user_func_array($callback, [$importModel]);
+                        }
                     }
                 }
-            } else {
-                // Check if there are any callback registed and if so execute the code
-                if (count(self::$callback['success']) > 0) {
-                    foreach (self::$callback['success'] as $callback) {
-                        // The model is send tho the callback function
-                        call_user_func_array($callback, [$importModel]);
+            }
+        }
+
+        // Check if there are callback regisrerd that must be called once
+        if (count(self::$callback['once']['failed']) > 0 or count(self::$callback['once']['success']) > 0) {
+
+            // Execute failed callbacks if there are any registerd
+            if (count(self::$callback['once']['failed']) > 0) {
+                $failedImports = $notCheckedImports->filter(function ($model) {
+                    return $model->IMPH_PROCESS_CODE == '-30';
+                });
+
+                if (count($failedImports) > 0) {
+                    foreach (self::$callback['once']['failed'] as $callback) {
+                        // The collection is send tho the callback function
+                        call_user_func_array($callback, [$failedImports->values()]);
                     }
                 }
             }
 
-            // And update the model that it is checked (use forceSave to overwrite the validation on the model)
-            $importModel->IMPH_DESCRIPTION = 'IMPORT_CHECK_EXECUTED';
-            $importModel->forceSave();
+            // Execute success callbacks if there are any registerd
+            if (count(self::$callback['once']['success']) > 0) {
+                $successImports = $notCheckedImports->filter(function ($model) {
+                    return $model->IMPH_PROCESS_CODE == '50';
+                });
+
+                if (count($successImports) > 0) {
+                    foreach (self::$callback['once']['success'] as $callback) {
+                        // The collection is send tho the callback function
+                        call_user_func_array($callback, [$successImports->values()]);
+                    }
+                }
+            }
         }
     }
 
@@ -61,15 +95,21 @@ class ImportCheck
      *
      * @param callable $callback
      * @param string   $type
+     * @param bool     $once
      *
      * @return void
      */
-    public static function registerCallback(callable $callback, string $type)
+    public static function registerCallback(callable $callback, string $type, bool $once = false)
     {
+
         if (!in_array($type, ['failed', 'success'])) {
             throw new InvalidArgumentException(sprintf('The specified type "%s" is a invalid type', $type));
         }
 
-        self::$callback[$type][] = $callback;
+        if (!$once) {
+            self::$callback[$type][] = $callback;
+        } else {
+            self::$callback['once'][$type][] = $callback;
+        }
     }
 }

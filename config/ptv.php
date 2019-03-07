@@ -84,4 +84,11 @@ return [
             'IORA_TOUR_POS'        => 'NONE',
         ],
     ],
+
+    /*
+       This configuration setting allows you to define if the import records must be updated after the importcheck invokable object has run
+       when this option is set to false no update to the database is written when the importcheck has ran. Be carefull when setting this to false
+       these callbacks set the values in the imph_import_header so they are not checked again
+     */
+    'useupdateimportcallbacks' => true
 ];
