@@ -22,6 +22,7 @@
     },
     "require": {
         "watson/validating": "^3.1",
-        "awobaz/compoships": "^1.1"
+        "awobaz/compoships": "^1.1",
+        "staudenmeir/eloquent-param-limit-fix": "^1.0"
     }
 }

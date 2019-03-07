@@ -4,10 +4,11 @@ namespace Noxxie\Ptv\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Watson\Validating\ValidatingTrait;
+use Staudenmeir\EloquentParamLimitFix\ParamLimitFix;
 
 class Iorh_order_header extends Model
 {
-    use ValidatingTrait;
+    use ValidatingTrait, ParamLimitFix;
 
     /**
      * The connection name for the model.

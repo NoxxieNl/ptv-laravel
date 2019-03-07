@@ -5,10 +5,11 @@ namespace Noxxie\Ptv\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Watson\Validating\ValidatingTrait;
+use Staudenmeir\EloquentParamLimitFix\ParamLimitFix;
 
 class Imph_import_header extends Model
 {
-    use ValidatingTrait;
+    use ValidatingTrait, ParamLimitFix;
 
     /**
      * The connection name for the model.
@@ -39,7 +40,7 @@ class Imph_import_header extends Model
      * @var array
      */
     protected $rules = [
-        'IMPH_REFERENCE'     => 'unique:ptv.IMPH_IMPORT_HEADER,IMPH_REFERENCE|required|integer|digits_between:0,999999999',
+        'IMPH_REFERENCE'     => 'required|integer|digits_between:0,999999999',
         'IMPH_CONTEXT'       => 'required|string|max:20',
         'IMPH_OBJECT_TYPE'   => 'required|string',
         'IMPH_ACTION_CODE'   => 'required|in:NEW,UPDATE,DELETE',
