@@ -38,7 +38,7 @@ class Iora_order_actionpoint extends Model
      * @var array
      */
     protected $rules = [
-        'IORA_IMPH_REFERENCE'            => 'required|numeric|digits_between:0,999999999|exists:ptv.IMPH_IMPORT_HEADER,IMPH_REFERENCE',
+        'IORA_IMPH_REFERENCE'            => 'required|numeric|digits_between:0,999999999',
         'IORA_ACTION'                    => 'required|string|max:20|in:DELIVERY,PICKUP',
         'IORA_EXTID1'                    => 'required|string|max:50',
         'IORA_EXTID2'                    => 'string|max:50',

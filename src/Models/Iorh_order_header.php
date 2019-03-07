@@ -38,7 +38,7 @@ class Iorh_order_header extends Model
      * @var array
      */
     protected $rules = [
-        'IORH_IMPH_REFERENCE'           => 'required|numeric|digits_between:0,999999999|exists:ptv.IMPH_IMPORT_HEADER,IMPH_REFERENCE',
+        'IORH_IMPH_REFERENCE'           => 'required|numeric|digits_between:0,999999999',
         'IORH_ORDER_TYPE'               => 'required|string|max:20|in:TRANSPORT,DELIVERY,PICKUP',
         'IORH_EXTID2'                   => 'string|max:50',
         'IORH_CUSTOMER_ORDER_EXTID'     => 'string|max:50',

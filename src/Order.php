@@ -4,6 +4,7 @@ namespace Noxxie\Ptv;
 
 use BadMethodCallException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Noxxie\Ptv\Contracts\Order as DefaultOrderContract;
 use Noxxie\Ptv\Exceptions\InvalidAttributeException;
 use Noxxie\Ptv\Exceptions\ModelValidationException;
@@ -12,10 +13,32 @@ use Noxxie\Ptv\Models\Iora_order_actionpoint;
 use Noxxie\Ptv\Models\Iorh_order_header;
 use Noxxie\Ptv\Traits\defaultAttributes;
 use Noxxie\Ptv\Traits\friendlyAttributes;
+use Noxxie\Ptv\Exceptions\InvalidModelException;
 
 class Order implements DefaultOrderContract
 {
     use defaultAttributes, friendlyAttributes;
+
+    /**
+     * Contains the header model when it is valid
+     *
+     * @var null|\Noxxie\Ptv\Models\Imph_import_header;
+     */
+    public $headerModel = null;
+
+    /**
+     * Contains the order header model when it is valid
+     *
+     * @var null|\Noxxie\Ptv\Models\Iorh_order_header;
+     */
+    public $orderHeaderModel = null;
+
+    /**
+     * Contains the order actionpoint header when it is valid
+     *
+     * @var null|\Noxxie\Ptv\Models\Iora_order_actionpoint;
+     */
+    public $orderActionpointModel = null;
 
     /**
      * Contain all the attributes that are used to create this order.
@@ -50,40 +73,67 @@ class Order implements DefaultOrderContract
      * Create a new order in the PTV database.
      *
      * @param \Illuminate\Support\Collection $attributes
+     * @param bool $directSave
      *
      * @return bool
      */
-    public function create(Collection $attributes)
+    public function create(Collection $attributes, bool $directSave = true)
     {
         // Fill the needed attributes
         $this->fillAttributes($attributes);
 
         // Insert the import header
         $header = (new Imph_import_header())->fill($this->attributes['IMPH_IMPORT_HEADER']);
-        if (!$header->save()) {
-            throw new ModelValidationException($header->GetErrors());
+
+        if ($directSave) {
+            if (!$header->save()) {
+                throw new ModelValidationException($header->GetErrors());
+            }
+        } else {
+            if (!$header->isValid()) {
+                throw new ModelValidationException($header->GetErrors());
+            }
+            $this->headerModel = $header;
         }
 
         // Insert the order header
         $orderHeader = (new Iorh_order_header())->fill($this->attributes['IORH_ORDER_HEADER']);
-        if (!$orderHeader->save()) {
-            // Destroy the import_header record, if we do the database will remove the rest of the import data (cascading)
-            Imph_Import_header::destroy($this->attributes['IMPH_IMPORT_HEADER']['IMPH_REFERENCE']);
 
-            throw new ModelValidationException($orderHeader->getErrors());
+        if ($directSave) {
+            if (!$orderHeader->save()) {
+                // Destroy the import_header record, if we do the database will remove the rest of the import data (cascading)
+                Imph_Import_header::destroy($this->attributes['IMPH_IMPORT_HEADER']['IMPH_REFERENCE']);
+
+                throw new ModelValidationException($orderHeader->getErrors());
+            }
+        } else {
+            if (!$orderHeader->isValid()) {
+                throw new ModelValidationException($orderHeader->GetErrors());
+            }
+            $this->orderHeaderModel = $orderHeader;
         }
 
         // Inser the order actionpoint
         $orderActionpoint = (new Iora_order_actionpoint())->fill($this->attributes['IORA_ORDER_ACTIONPOINT']);
-        if (!$orderActionpoint->save()) {
-            // Destroy the import_header record, if we do the database will remove the rest of the import data (cascading)
-            Imph_Import_header::destroy($this->attributes['IMPH_IMPORT_HEADER']['IMPH_REFERENCE']);
 
-            throw new ModelValidationException(($orderActionpoint->getErrors()));
+        if ($directSave) {
+            if (!$orderActionpoint->save()) {
+                // Destroy the import_header record, if we do the database will remove the rest of the import data (cascading)
+                Imph_Import_header::destroy($this->attributes['IMPH_IMPORT_HEADER']['IMPH_REFERENCE']);
+
+                throw new ModelValidationException(($orderActionpoint->getErrors()));
+            }
+        } else {
+            if (!$orderActionpoint->isValid()) {
+                throw new ModelValidationException($orderActionpoint->GetErrors());
+            }
+            $this->orderActionpointModel = $orderActionpoint;
         }
 
         // When everything is correct update the inserted imph_import_header to 20 so that PTV knows it can import the record
-        $header->update(['IMPH_PROCESS_CODE' => '20']);
+        if ($directSave) {
+            $header->update(['IMPH_PROCESS_CODE' => '20']);
+        }
 
         // And we are done
         return true;
@@ -93,26 +143,28 @@ class Order implements DefaultOrderContract
      * Update an existing order in PTV.
      *
      * @param \Illuminate\Support\Collection $attributes
+     * @param bool $directSave
      *
      * @return bool
      */
-    public function update(Collection $attributes)
+    public function update(Collection $attributes, bool $directSave = true)
     {
         // Add the UPDATE command, the rest is the same is the create command
         $attributes['IMPH_ACTION_CODE'] = 'UPDATE';
 
         // Just execute the create command and we are fine
-        return $this->create($attributes);
+        return $this->create($attributes, $directSave);
     }
 
     /**
      * Delete an existing order in PTV.
      *
      * @param \Illuminate\Support\Collection $attributes
+     * @param bool $directSave
      *
      * @return bool
      */
-    public function delete(Collection $attributes)
+    public function delete(Collection $attributes, bool $directSave)
     {
         // Add the DELETE command as attribute to the array
         $attributes['IMPH_ACTION_CODE'] = 'DELETE';
@@ -122,12 +174,20 @@ class Order implements DefaultOrderContract
 
         // Insert the import header
         $header = (new Imph_import_header())->fill($this->attributes['IMPH_IMPORT_HEADER']);
-        if (!$header->save()) {
-            throw new ModelValidationException($header->GetErrors());
-        }
 
-        // When everything is correct update the inserted imph_import_header to 20 so that PTV knows it can import the record
-        $header->update(['IMPH_PROCESS_CODE' => '20']);
+        if ($directSave) {
+            if (!$header->save()) {
+                throw new ModelValidationException($header->GetErrors());
+            }
+
+            // When everything is correct update the inserted imph_import_header to 20 so that PTV knows it can import the record
+            $header->update(['IMPH_PROCESS_CODE' => '20']);
+        } else {
+            if (!$header->isValid()) {
+                throw new ModelValidationException($header->GetErrors());
+            }
+            $this->headerModel = $header;
+        }
 
         // And we are done
         return true;
@@ -161,5 +221,67 @@ class Order implements DefaultOrderContract
             // We did not find a friendly or a column attribute, we do not know what te do it with it, throw an exception
             throw new InvalidAttributeException(sprintf('The specified attribute "%s" could not be found in any table model', $column));
         }
+    }
+
+    /**
+     * This allows the insertion of multi records into the transfer database at once this option only works when the save / update or delete method
+     * option $directSave is set to false
+     *
+     * @param \Illuminate\Support\Collection $collection
+     *
+     * @return void
+     */
+    static public function massSave(Collection $collection)
+    {
+        $models = [
+            'header'           => [],
+            'orderheader'      => [],
+            'orderactionpoint' => [],
+        ];
+
+        $references = [];
+
+        foreach ($collection as $orderInstance)
+        {
+            // Check if the instance is an order model
+            if (!$orderInstance instanceof Order) {
+                throw new InvalidModelException('The specified instance is not of the model type "order"');
+            }
+
+            // Check if every all the correct models are defined
+            if (is_null($orderInstance->headerModel)) {
+                throw new InvalidModelException('The specified instance was of type "order" except not all sub models were correctly defined');
+            }
+
+            // When the delete method is specified only a header model is needed
+            if ($orderInstance->headerModel->IMPH_ACTION_CODE != 'DELETE') {
+                if (is_null($orderInstance->orderHeaderModel) || is_null($orderInstance->orderActionpointModel)) {
+                    throw new InvalidModelException('The specified instance was of type "order" except not all sub models were correctly defined');
+                }
+            }
+
+            // Set the header model instance and grab the reference for mass update later
+            $models['header'][] = $orderInstance->headerModel->getAttributes();
+            $references[] = $orderInstance->headerModel->IMPH_REFERENCE;
+
+            // When the delete method is specified only a header model is needed
+            if ($orderInstance->headerModel->IMPH_ACTION_CODE != 'DELETE') {
+                $models['orderheader'][] = $orderInstance->orderHeaderModel->getAttributes();
+                $models['orderactionpoint'][] = $orderInstance->orderActionpointModel->getAttributes();
+            }
+        }
+
+        // Well we have all the models we want now insert them
+        Imph_import_header::insert($models['header']);
+        Iorh_order_header::insert($models['orderheader']);
+        Iora_order_actionpoint::insert($models['orderactionpoint']);
+
+        // and now update all the records that they may be imported into PTV
+        DB::connection(config('ptv.connection'))
+                    ->table($collection[0]->headerModel->getTable())
+                    ->whereIn('IMPH_REFERENCE', $references)
+                    ->update(['IMPH_PROCESS_CODE' => '20']);
+
+        return true;
     }
 }
