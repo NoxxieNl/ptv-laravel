@@ -7,34 +7,34 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Noxxie\Ptv\Contracts\Order as DefaultOrderContract;
 use Noxxie\Ptv\Exceptions\InvalidAttributeException;
+use Noxxie\Ptv\Exceptions\InvalidModelException;
 use Noxxie\Ptv\Exceptions\ModelValidationException;
 use Noxxie\Ptv\Models\Imph_import_header;
 use Noxxie\Ptv\Models\Iora_order_actionpoint;
 use Noxxie\Ptv\Models\Iorh_order_header;
 use Noxxie\Ptv\Traits\defaultAttributes;
 use Noxxie\Ptv\Traits\friendlyAttributes;
-use Noxxie\Ptv\Exceptions\InvalidModelException;
 
 class Order implements DefaultOrderContract
 {
     use defaultAttributes, friendlyAttributes;
 
     /**
-     * Contains the header model when it is valid
+     * Contains the header model when it is valid.
      *
      * @var null|\Noxxie\Ptv\Models\Imph_import_header;
      */
     public $headerModel = null;
 
     /**
-     * Contains the order header model when it is valid
+     * Contains the order header model when it is valid.
      *
      * @var null|\Noxxie\Ptv\Models\Iorh_order_header;
      */
     public $orderHeaderModel = null;
 
     /**
-     * Contains the order actionpoint header when it is valid
+     * Contains the order actionpoint header when it is valid.
      *
      * @var null|\Noxxie\Ptv\Models\Iora_order_actionpoint;
      */
@@ -73,7 +73,7 @@ class Order implements DefaultOrderContract
      * Create a new order in the PTV database.
      *
      * @param \Illuminate\Support\Collection $attributes
-     * @param bool $directSave
+     * @param bool                           $directSave
      *
      * @return bool
      */
@@ -143,7 +143,7 @@ class Order implements DefaultOrderContract
      * Update an existing order in PTV.
      *
      * @param \Illuminate\Support\Collection $attributes
-     * @param bool $directSave
+     * @param bool                           $directSave
      *
      * @return bool
      */
@@ -160,7 +160,7 @@ class Order implements DefaultOrderContract
      * Delete an existing order in PTV.
      *
      * @param \Illuminate\Support\Collection $attributes
-     * @param bool $directSave
+     * @param bool                           $directSave
      *
      * @return bool
      */
@@ -225,13 +225,13 @@ class Order implements DefaultOrderContract
 
     /**
      * This allows the insertion of multi records into the transfer database at once this option only works when the save / update or delete method
-     * option $directSave is set to false
+     * option $directSave is set to false.
      *
      * @param \Illuminate\Support\Collection $collection
      *
      * @return void
      */
-    static public function massSave(Collection $collection)
+    public static function massSave(Collection $collection)
     {
         $models = [
             'header'           => [],
@@ -241,10 +241,9 @@ class Order implements DefaultOrderContract
 
         $references = [];
 
-        foreach ($collection as $orderInstance)
-        {
+        foreach ($collection as $orderInstance) {
             // Check if the instance is an order model
-            if (!$orderInstance instanceof Order) {
+            if (!$orderInstance instanceof self) {
                 throw new InvalidModelException('The specified instance is not of the model type "order"');
             }
 

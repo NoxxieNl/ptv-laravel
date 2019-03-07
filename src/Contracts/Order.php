@@ -10,7 +10,7 @@ interface Order
      * Creates a new object for the order.
      *
      * @param Illuminate\Support\Collection $attributes
-     * @param bool $directSave
+     * @param bool                          $directSave
      *
      * @return mixed
      */
@@ -20,7 +20,7 @@ interface Order
      * Update an existing order.
      *
      * @param Illuminate\Support\Collection $attributes
-     * @param bool $directSave
+     * @param bool                          $directSave
      *
      * @return void
      */
@@ -30,7 +30,7 @@ interface Order
      * Delete an order.
      *
      * @param Illuminate\Support\Collection $attributes
-     * @param bool $directSave
+     * @param bool                          $directSave
      *
      * @return void
      */
