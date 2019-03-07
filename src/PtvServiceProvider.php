@@ -2,13 +2,13 @@
 
 namespace Noxxie\Ptv;
 
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\ServiceProvider;
+use InvalidArgumentException;
 use Noxxie\Ptv\Contracts\Order as OrderContract;
 use Noxxie\Ptv\Contracts\Route as RouteContract;
 use Noxxie\Ptv\ImportCheck;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection;
-use Illuminate\Support\ServiceProvider;
-use InvalidArgumentException;
 
 class PtvServiceProvider extends ServiceProvider
 {
@@ -50,8 +50,7 @@ class PtvServiceProvider extends ServiceProvider
                 $failedReferences = [];
 
                 // Loop every model and fetch the reference
-                foreach ($models as $model)
-                {
+                foreach ($models as $model) {
                     $failedReferences[] = $model->IMPH_REFERENCE;
                 }
 
@@ -66,14 +65,13 @@ class PtvServiceProvider extends ServiceProvider
                 $successReferences = [];
 
                 // Loop every model and fetch the reference
-                foreach ($models as $model)
-                {
+                foreach ($models as $model) {
                     $successReferences[] = $model->IMPH_REFERENCE;
                 }
 
                 // Run the update statement
-                DB::connection(config('ptv.connection'))->table($models[0]
-                    ->getTable())
+                DB::connection(config('ptv.connection'))
+                    ->table($models[0]->getTable())
                     ->whereIn('IMPH_REFERENCE', $successReferences)
                     ->update(['IMPH_DESCRIPTION' => 'IMPORT_CHECK_EXECUTED']);
             }, 'success', true);

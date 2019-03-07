@@ -16,8 +16,8 @@ class ImportCheck
         'failed'  => [],
         'success' => [],
         'once' => [
-            'failed' => [],
-            'success' => []
+            'failed'  => [],
+            'success' => [],
         ]
     ];
 
@@ -101,7 +101,6 @@ class ImportCheck
      */
     public static function registerCallback(callable $callback, string $type, bool $once = false)
     {
-
         if (!in_array($type, ['failed', 'success'])) {
             throw new InvalidArgumentException(sprintf('The specified type "%s" is a invalid type', $type));
         }

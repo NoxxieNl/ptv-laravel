@@ -72,7 +72,7 @@ public function register()
 }
 ````
 
-The callbacks that you register needs to except one parameter. The parameter will be filled with a model instance of `Imph_import_header` and so you have full access to it within your call back.
+The callbacks that you register needs to except one parameter. The parameter will be filled with a model instance of `Imph_import_header` and so you have full access to it within your callback.
 
 ### Global callback
 
@@ -103,4 +103,6 @@ public function register()
     }, 'success', true);
 }
 ````
-The callbacks that you register needs to except one parameter. The parameter will be filled with a model instance of a `eloquent collection` and so you have full access to it within your call back. Even when there is only one record send to your callback it still will be in a `collection`.
+The callbacks that you register needs to except one parameter. The parameter will be filled with a instance of `Illuminate\Database\Eloquent\Collection` and so you have full access to it within your call back. Even when there is only one record send to your callback it still will be in a `collection`.
+
+You can also check the [PtvServiceProvider](https://github.com/NoxxieNl/ptv-laravel/blob/master/src/PtvServiceProvider.php#L45) file how the default callbacks are registerd within the package. 

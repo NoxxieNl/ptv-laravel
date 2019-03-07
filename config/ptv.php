@@ -90,5 +90,5 @@ return [
        when this option is set to false no update to the database is written when the importcheck has ran. Be carefull when setting this to false
        these callbacks set the values in the imph_import_header so they are not checked again
      */
-    'useupdateimportcallbacks' => true
+    'useupdateimportcallbacks' => true,
 ];
