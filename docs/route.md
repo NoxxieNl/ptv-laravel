@@ -16,7 +16,7 @@ use Noxxie\Ptv\Route;
 ...
 
 public function mockup(Route $route) {
-	$route->create(...);
+    $route->create(...);
 }
 ````
 When you use the dependency injection option you will have an instance of the `route` object. And so you can directly use the functionality provided by that class.
@@ -31,7 +31,7 @@ When you want to retrieve a route straight away from the service container you c
 
 ````php
 $route = App()->MakeWith('Noxxie\Ptv\Route', [
-	'id' => 1234
+    'id' => 1234,
 ]);
 ````
 
@@ -43,7 +43,7 @@ Of course you can also use the old fashioned way and just create the class manua
 use Noxxie\Ptv\Route;
 ...
 public function mockup() {
-	$route = new Route();
+    $route = new Route();
 }
 ````
 

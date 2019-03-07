@@ -16,7 +16,7 @@ use Noxxie\Ptv\Order;
 ...
 
 public function mockup(Order $order) {
-	$order->create(...);
+    $order->create(...);
 }
 ````
 When you use the dependency injection option you will have an instance of the `order` object. And so you can directly use the functionality provided by that class.
@@ -31,8 +31,8 @@ When you want to create a new order within PTV you can also resolve the instance
 
 ````php
 $order = App()->MakeWith('Noxxie\Ptv\Order', [
-	'type' => 'CREATE',
-	'attributes' => ...
+    'type' => 'CREATE',
+    'attributes' => [...],
 ]);
 ````
 
@@ -44,7 +44,7 @@ Of course you can also use the old fashioned way and just create the class manua
 use Noxxie\Ptv\Order;
 ...
 public function mockup() {
-	$Order = new Order();
+    $Order = new Order();
 }
 ````
 
@@ -61,17 +61,17 @@ You can do so by using the `collect` function that is provided within the Larave
 A simple example for creating a valid order:
 ````php
 $data = collect([
-	'reference' => '987654321',
-	'priority' => 1,
-	'postcode' => '3744AA',
-	'city' => 'Baarn',
-	'street' => 'Amsterdamsestraatweg',
-	'houseno' => '1',
-	'country' => 'NL',
-	'timewindow' => '501',
-	'from' => '20190101',
-	'till' => '20191231',
-	'IORH_TEXT_1' => 'Hello world'
+    'reference'     => '987654321',
+    'priority'      => 1,
+    'postcode'      => '3744AA',
+    'city'          => 'Baarn',
+    'street'        => 'Amsterdamsestraatweg',
+    'houseno'       => '1',
+    'country'       => 'NL',
+    'timewindow'    => '501',
+    'from'          => '20190101',
+    'till'          => '20191231',
+    'IORH_TEXT_1'   => 'Hello world',
 ]);
 ````
 
@@ -99,10 +99,10 @@ The delete method only needs one attribute to allow a correct deletion in PTV an
 
 ````php
 $order = App()->MakeWith('Noxxie\Ptv\Order', [
-	'type' => 'DELETE',
-	'attributes' => collect([
-		'reference' => 12345678
-	])
+    'type' => 'DELETE',
+    'attributes' => collect([
+        'reference' => 12345678,
+    ])
 ]);
 ````
 This will add a delete record to the transfer database. The actual import in PTV will throw an error when the record cannot be deleted or cannot be found. There a various reasons why a order cannot be deleted within PTV.

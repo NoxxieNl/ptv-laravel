@@ -13,8 +13,8 @@ The service provider will automatically get registered. Or you may manually add 
 
 ````php
 'providers' => [
-	 // ...
-	 Noxxie\Ptv\PtvServiceProvider::class,
+     ...
+     Noxxie\Ptv\PtvServiceProvider::class,
 ];
 ````
 
@@ -32,15 +32,15 @@ Example of a database connection:
 ````php
 ...
 'ptv'  =>  [
-	'driver'  			=>  'sqlsrv',
-	'host'  			=>  '',
-	'port'  			=>  '1433',
-	'database'  		=>  '',
-	'username'  		=>  '',
-	'password'  		=>  '',
-	'charset'  			=>  'utf8',
-	'prefix'			=>  '',
-	'prefix_indexes'  	=>  true,
+    'driver'            =>  'sqlsrv',
+    'host'              =>  '',
+    'port'              =>  '1433',
+    'database'          =>  '',
+    'username'          =>  '',
+    'password'          =>  '',
+    'charset'           =>  'utf8',
+    'prefix'            =>  '',
+    'prefix_indexes'    =>  true,
 ],
 ...
 ````
@@ -50,14 +50,14 @@ By default this package comes with pre configured easy naming options. For examp
 
 ````php
 'IORA_ORDER_ACTIONPOINT'  =>  [
-	'postcode'  	=>  'IORA_POSTCODE',
-	'city'  		=>  'IORA_CITY',
-	'country'  		=>  'IORA_COUNTRY',
-	'street'  		=>  'IORA_STREET',
-	'houseno'  		=>  'IORA_HOUSENO',
-	'timewindow'  	=>  'IORA_HANDLINGTIME_CLASS',
-	'from'  		=>  'IORA_EARLIEST_DATETIME',
-	'till'  		=>  'IORA_LATEST_DATETIME'
+    'postcode'      =>  'IORA_POSTCODE',
+    'city'          =>  'IORA_CITY',
+    'country'       =>  'IORA_COUNTRY',
+    'street'        =>  'IORA_STREET',
+    'houseno'       =>  'IORA_HOUSENO',
+    'timewindow'    =>  'IORA_HANDLINGTIME_CLASS',
+    'from'          =>  'IORA_EARLIEST_DATETIME',
+    'till'          =>  'IORA_LATEST_DATETIME',
 ],
 ````
 
@@ -71,7 +71,7 @@ Also with the default option you can use `placeholders` that are replaced with d
 
 - `%UNIQUE_ID%`, will be replaced by a unique ID that is not used within the transfer database
 - `%CURRENT_DATE%`, will be replaced by the current date (format Ymd)
-- `UNIQUE_IORA_ID%`, will be replaced by a unique ID that is used for creating new order locations within PTV
+- `%UNIQUE_IORA_ID%`, will be replaced by a unique ID that is used for creating new order locations within PTV
 
 If you are **NOT** sure how to deal with this options with regard to the transfer database from PTV do **NOT** change the placeholders that are already in place by default within this package.
 
@@ -90,11 +90,11 @@ use Noxxie\Ptv\Route;
 ...
 
 public function mockup(Route $route) {
-	$order->create(...);
+    $order->create(...);
 }
 
 public function mockup_order(Order $order) {
-	$route->getNotImported();
+    $route->getNotImported();
 }
 ````
 When you use the dependency injection option you will have an instance of the `route` or `order` object. And so you can directly use the functionality provided by that class.
@@ -110,8 +110,8 @@ When you want to create a new order within PTV you can also resolve the instance
 
 ````php
 $order = App()->MakeWith('Noxxie\Ptv\Order', [
-	'type' => 'CREATE',
-    'attributes' => ...
+    'type' => 'CREATE',
+    'attributes' => [...],
 ]);
 ````
 
@@ -119,7 +119,7 @@ The same applies for resolving a route from the service container. However the f
 
 ````php
 $route= App()->MakeWith('Noxxie\Ptv\Route', [
-	'id' => 123456
+    'id' => 123456,
 ];
 ````
 
@@ -134,8 +134,8 @@ use Noxxie\Ptv\Order;
 ...
 
 public function mockup() {
-	$Order = new Order();
-	$Route = new Route();
+    $Order = new Order();
+    $Route = new Route();
 }
 ````
 
