@@ -271,9 +271,18 @@ class Order implements DefaultOrderContract
         }
 
         // Well we have all the models we want now insert them
-        Imph_import_header::insert($models['header']);
-        Iorh_order_header::insert($models['orderheader']);
-        Iora_order_actionpoint::insert($models['orderactionpoint']);
+         // Well we have all the models we want now insert them
+        foreach (array_chunk($models['header'], 100) as $chunk) {
+            Imph_import_header::insert($chunk);
+        }
+
+        foreach (array_chunk($models['orderheader'], 100) as $chunk) {
+            Iorh_order_header::insert($chunk);
+        }
+
+        foreach (array_chunk($models['orderactionpoint'], 100) as $chunk) {
+            Iora_order_actionpoint::insert($chunk);
+        }
 
         // and now update all the records that they may be imported into PTV
         DB::connection(config('ptv.connection'))

@@ -4,11 +4,10 @@ namespace Noxxie\Ptv\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Watson\Validating\ValidatingTrait;
-use Staudenmeir\EloquentParamLimitFix\ParamLimitFix;
 
 class Iora_order_actionpoint extends Model
 {
-    use ValidatingTrait, ParamLimitFix;
+    use ValidatingTrait;
 
     /**
      * The connection name for the model.
