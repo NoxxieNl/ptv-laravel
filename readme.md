@@ -1,5 +1,10 @@
 # PTV-Laravel
 
+![StyleCi](https://github.styleci.io/repos/174130267/shield)
+![license](https://img.shields.io/packagist/l/noxxie/ptv-laravel.svg)
+![version](https://img.shields.io/packagist/v/noxxie/ptv-laravel.svg)
+![activity](https://img.shields.io/github/last-commit/noxxienl/ptv-laravel.svg)
+
 This package allows you to manage the import and export from data from and to the `transfer database` of an PTV application. This package uses the transferDB option within PTV to transfer data to and from PTV.
 
 ## Installation
@@ -9,7 +14,7 @@ You can install the package via composer:
 
 `composer require noxxie/ptv-laravel`
 
-The service provider will automatically get registered. Or you may manually add the service provider in your  `config/app.php`file:
+The service provider will automatically get registered. Or you may manually add the service provider in your  `config/app.php` file:
 
 ````php
 'providers' => [
