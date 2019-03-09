@@ -1,6 +1,6 @@
 # UniqueIdGeneration
 
-When you want to import data to the PTV transfer databse you must specify a unique ID for each new import. However sometimes it can happen you must import the same order from your own application to the PTV database. Then the unique ID of your own application suddenly is not unique anymore. Or perhaps you want to send an update to PTV for a specific order... well thats where this helper class comes in.
+When you want to import data to the PTV transfer database you must specify a unique ID for each new import. However sometimes it can happen you must import the same order again. Then the unique ID of your own application suddenly is not unique anymore. Or perhaps you want to send an update to PTV for a specific order... well thats where this helper class comes in.
 
 Binded as a `singleton` in the service container this class takes care of generation a unique random ID for your order creating / updateing or deleting insertions in the database. If you use the default configuration of this package the placeholder from the config `%UNIQUE_ID%` uses this class.
 
@@ -13,7 +13,9 @@ $idGenerator = App()->Make('Noxxie\Ptv\helpers\UniqueIdGeneration');
 
 Because how this packages registers the class within the container you can only resolve the concrete class of `UniqueIdGeneration` once. When you do another call to the service contrainer and retry to resolve the `UniqueIdGeneration` the container will return the first initiated version. Hence we use the `singleton` pattern here.
 
-After you resolved it from the container you can either generate a new ID, manually add a new ID to the `already used ID's stack` or delete an existing ID from the `already used ID's stack`.
+We do this because on the first resolving the `__construct` function is called where a database call is done to the PTV transfer database to fetch all existing references. And when you create allot of orders you do not want that the same query is executed for each new `order` instance.
+
+After you resolved it from the container you can either generate a new ID, manually add a new ID to the `already used ID's stack` or delete an existing ID from the same stack.
 
 To generate an ID you can simply use:
 ````php
@@ -36,3 +38,5 @@ And to remove one you can use the `remove` method:
 ````php
 $idGenerator->remove(123);
 ````
+
+
