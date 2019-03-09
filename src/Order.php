@@ -103,7 +103,6 @@ class Order implements DefaultOrderContract
             if (!$orderHeader->save()) {
                 // Destroy the import_header record, if we do the database will remove the rest of the import data (cascading)
                 Imph_Import_header::destroy($this->attributes['IMPH_IMPORT_HEADER']['IMPH_REFERENCE']);
-
                 throw new ModelValidationException($orderHeader->getErrors());
             }
         } else {
@@ -120,7 +119,6 @@ class Order implements DefaultOrderContract
             if (!$orderActionpoint->save()) {
                 // Destroy the import_header record, if we do the database will remove the rest of the import data (cascading)
                 Imph_Import_header::destroy($this->attributes['IMPH_IMPORT_HEADER']['IMPH_REFERENCE']);
-
                 throw new ModelValidationException(($orderActionpoint->getErrors()));
             }
         } else {
@@ -271,7 +269,6 @@ class Order implements DefaultOrderContract
         }
 
         // Well we have all the models we want now insert them
-         // Well we have all the models we want now insert them
         foreach (array_chunk($models['header'], 100) as $chunk) {
             Imph_import_header::insert($chunk);
         }

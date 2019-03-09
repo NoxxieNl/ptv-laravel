@@ -4,11 +4,8 @@ namespace Noxxie\Ptv\Traits;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Schema;
-use Noxxie\Ptv\Helpers\GetUniqueId;
-use Noxxie\Ptv\Models\Imph_import_header;
-use Noxxie\Ptv\Models\Iora_order_actionpoint;
-use Noxxie\Ptv\Models\Iorh_order_header;
+use Noxxie\Ptv\Helpers\UniqueIdGeneration;
+use Noxxie\Ptv\Helpers\TableColumnDefinitions;
 
 trait defaultAttributes
 {
@@ -60,7 +57,7 @@ trait defaultAttributes
         // Replace the unique ID place holder with an actuall unique ID, when non is generated yet generate one
         if ($data == '%UNIQUE_ID%') {
             if (!isset($this->unique_id)) {
-                $this->unique_id = GetUniqueId::generate();
+                $this->unique_id = app()->make(UniqueIdGeneration::class)->generate();
             }
 
             return $this->unique_id;
@@ -109,13 +106,6 @@ trait defaultAttributes
      */
     protected function fillColumnsVariable()
     {
-        $tableName = (new Imph_import_header())->getTable();
-        $this->columns[$tableName] = Schema::connection(config('ptv.connection'))->getColumnListing($tableName);
-
-        $tableName = (new Iorh_order_header())->getTable();
-        $this->columns[$tableName] = Schema::connection(config('ptv.connection'))->getColumnListing($tableName);
-
-        $tableName = (new Iora_order_actionpoint())->getTable();
-        $this->columns[$tableName] = Schema::connection(config('ptv.connection'))->getColumnListing($tableName);
+       $this->columns = App()->make(TableColumnDefinitions::class)->all();
     }
 }

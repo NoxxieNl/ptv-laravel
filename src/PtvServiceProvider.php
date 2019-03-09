@@ -8,6 +8,8 @@ use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
 use Noxxie\Ptv\Contracts\Order as OrderContract;
 use Noxxie\Ptv\Contracts\Route as RouteContract;
+use Noxxie\Ptv\Helpers\UniqueIdGeneration;
+use Noxxie\Ptv\Helpers\TableColumnDefinitions;
 
 class PtvServiceProvider extends ServiceProvider
 {
@@ -121,5 +123,17 @@ class PtvServiceProvider extends ServiceProvider
                 }
             }
         );
+
+        /*
+            Register a singleton for these class so that when a user is inserting allot of orders to the database
+            Data that needs to be fetched once from the databaes is not fetched everytime a order is created
+        */
+        $this->app->singleton(UniqueIdGeneration::class, function ($app) {
+            return new UniqueIdGeneration;
+        });
+
+        $this->app->singleton(TableColumnDefinitions::class, function ($app) {
+            return new TableColumnDefinitions;
+        });
     }
 }
