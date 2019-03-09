@@ -19,12 +19,15 @@ class TableColumnDefinitions {
      */
     public function __construct()
     {
+        // Import header
         $tableName = (new Imph_import_header())->getTable();
         $this->columns[$tableName] = Schema::connection(config('ptv.connection'))->getColumnListing($tableName);
 
+        // Order header
         $tableName = (new Iorh_order_header())->getTable();
         $this->columns[$tableName] = Schema::connection(config('ptv.connection'))->getColumnListing($tableName);
 
+        // Order actionpoint
         $tableName = (new Iora_order_actionpoint())->getTable();
         $this->columns[$tableName] = Schema::connection(config('ptv.connection'))->getColumnListing($tableName);
     }

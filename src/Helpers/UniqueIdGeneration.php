@@ -25,12 +25,12 @@ class UniqueIdGeneration
     /**
      * Generates a new unique ID
      *
-     * @param int $retry
      * @param int $maxRetries
+     * @param int $retry
      *
      * @return void
      */
-    public function generate(int $retry = 0, int $maxRetries = 10)
+    public function generate(int $maxRetries = 10, int $retry = 0)
     {
         // Generate a new random id
         $id = mt_rand(1, 99999999);
@@ -42,7 +42,7 @@ class UniqueIdGeneration
 
         // Check if the ID already exists within the used references stack if so rerun this method
         if ($this->usedReferences->contains($id)) {
-            return $this->generate(($retry + 1), $maxRetries);
+            return $this->generate($maxRetries, ($retry + 1));
         }
 
         // Add the new ID to the usedReferences stack
