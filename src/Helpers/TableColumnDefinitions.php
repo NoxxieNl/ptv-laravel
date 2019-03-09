@@ -1,36 +1,40 @@
 <?php
+
 namespace Noxxie\Ptv\Helpers;
 
+use Illuminate\Support\Facades\Schema;
 use Noxxie\Ptv\Models\Imph_import_header;
 use Noxxie\Ptv\Models\Iorh_order_header;
-use Illuminate\Support\Facades\Schema;
 
-class TableColumnDefinitions {
-
+class TableColumnDefinitions
+{
     /**
-     * Holds all the definitions of the fetched columns
+     * Holds all the definitions of the fetched columns.
      *
      * @var array
      */
     protected $columns = [];
 
     /**
-     * Create the column definitions of the tables we need
+     * Create the column definitions of the tables we need.
      */
     public function __construct()
     {
+        // Import header
         $tableName = (new Imph_import_header())->getTable();
         $this->columns[$tableName] = Schema::connection(config('ptv.connection'))->getColumnListing($tableName);
 
+        // Order header
         $tableName = (new Iorh_order_header())->getTable();
         $this->columns[$tableName] = Schema::connection(config('ptv.connection'))->getColumnListing($tableName);
 
+        // Order actionpoint
         $tableName = (new Iora_order_actionpoint())->getTable();
         $this->columns[$tableName] = Schema::connection(config('ptv.connection'))->getColumnListing($tableName);
     }
 
     /**
-     * Get all the columns of the specified column
+     * Get all the columns of the specified column.
      *
      * @param string $tableName
      *
@@ -46,7 +50,7 @@ class TableColumnDefinitions {
     }
 
     /**
-     * Return the complete array of defined columns
+     * Return the complete array of defined columns.
      *
      * @return void
      */

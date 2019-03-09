@@ -4,8 +4,8 @@ namespace Noxxie\Ptv\Traits;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use Noxxie\Ptv\Helpers\UniqueIdGeneration;
 use Noxxie\Ptv\Helpers\TableColumnDefinitions;
+use Noxxie\Ptv\Helpers\UniqueIdGeneration;
 
 trait defaultAttributes
 {
@@ -106,6 +106,6 @@ trait defaultAttributes
      */
     protected function fillColumnsVariable()
     {
-       $this->columns = App()->make(TableColumnDefinitions::class)->all();
+        $this->columns = App()->make(TableColumnDefinitions::class)->all();
     }
 }

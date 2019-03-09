@@ -1,4 +1,5 @@
 <?php
+
 namespace Noxxie\Ptv\Helpers;
 
 use Noxxie\Ptv\Models\Imph_import_header;
@@ -7,14 +8,14 @@ use RunTimeException;
 class UniqueIdGeneration
 {
     /**
-     * Contains all the used ID's within the PTV transfer database
+     * Contains all the used ID's within the PTV transfer database.
      *
      * @var Illuminate\Support\Collection
      */
     protected $usedReferences;
 
     /**
-     * Constructor function because we use this class as a singleton it will be only called once
+     * Constructor function because we use this class as a singleton it will be only called once.
      */
     public function __construct()
     {
@@ -23,14 +24,14 @@ class UniqueIdGeneration
     }
 
     /**
-     * Generates a new unique ID
+     * Generates a new unique ID.
      *
-     * @param int $retry
      * @param int $maxRetries
+     * @param int $retry
      *
      * @return void
      */
-    public function generate(int $retry = 0, int $maxRetries = 10)
+    public function generate(int $maxRetries = 10, int $retry = 0)
     {
         // Generate a new random id
         $id = mt_rand(1, 99999999);
@@ -42,7 +43,7 @@ class UniqueIdGeneration
 
         // Check if the ID already exists within the used references stack if so rerun this method
         if ($this->usedReferences->contains($id)) {
-            return $this->generate(($retry + 1), $maxRetries);
+            return $this->generate($maxRetries, ($retry + 1));
         }
 
         // Add the new ID to the usedReferences stack
@@ -53,7 +54,7 @@ class UniqueIdGeneration
     }
 
     /**
-     * Removes an inserted ID from the used references stack
+     * Removes an inserted ID from the used references stack.
      *
      * @param int $id
      *
@@ -67,7 +68,7 @@ class UniqueIdGeneration
     }
 
     /**
-     * Manually add an ID to the used references stack
+     * Manually add an ID to the used references stack.
      *
      * @param int $id
      *
