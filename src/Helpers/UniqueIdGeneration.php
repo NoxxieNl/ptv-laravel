@@ -1,4 +1,5 @@
 <?php
+
 namespace Noxxie\Ptv\Helpers;
 
 use Noxxie\Ptv\Models\Imph_import_header;
@@ -7,14 +8,14 @@ use RunTimeException;
 class UniqueIdGeneration
 {
     /**
-     * Contains all the used ID's within the PTV transfer database
+     * Contains all the used ID's within the PTV transfer database.
      *
      * @var Illuminate\Support\Collection
      */
     protected $usedReferences;
 
     /**
-     * Constructor function because we use this class as a singleton it will be only called once
+     * Constructor function because we use this class as a singleton it will be only called once.
      */
     public function __construct()
     {
@@ -23,7 +24,7 @@ class UniqueIdGeneration
     }
 
     /**
-     * Generates a new unique ID
+     * Generates a new unique ID.
      *
      * @param int $retry
      * @param int $maxRetries
@@ -53,7 +54,7 @@ class UniqueIdGeneration
     }
 
     /**
-     * Removes an inserted ID from the used references stack
+     * Removes an inserted ID from the used references stack.
      *
      * @param int $id
      *
@@ -67,7 +68,7 @@ class UniqueIdGeneration
     }
 
     /**
-     * Manually add an ID to the used references stack
+     * Manually add an ID to the used references stack.
      *
      * @param int $id
      *

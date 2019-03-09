@@ -1,21 +1,22 @@
 <?php
+
 namespace Noxxie\Ptv\Helpers;
 
+use Illuminate\Support\Facades\Schema;
 use Noxxie\Ptv\Models\Imph_import_header;
 use Noxxie\Ptv\Models\Iorh_order_header;
-use Illuminate\Support\Facades\Schema;
 
-class TableColumnDefinitions {
-
+class TableColumnDefinitions
+{
     /**
-     * Holds all the definitions of the fetched columns
+     * Holds all the definitions of the fetched columns.
      *
      * @var array
      */
     protected $columns = [];
 
     /**
-     * Create the column definitions of the tables we need
+     * Create the column definitions of the tables we need.
      */
     public function __construct()
     {
@@ -30,7 +31,7 @@ class TableColumnDefinitions {
     }
 
     /**
-     * Get all the columns of the specified column
+     * Get all the columns of the specified column.
      *
      * @param string $tableName
      *
@@ -46,7 +47,7 @@ class TableColumnDefinitions {
     }
 
     /**
-     * Return the complete array of defined columns
+     * Return the complete array of defined columns.
      *
      * @return void
      */
