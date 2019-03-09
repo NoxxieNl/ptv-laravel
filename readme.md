@@ -147,6 +147,8 @@ For more detailed examples and documentation look in the docs folder to get deta
 
 For the extra step into making sure your data is really imported into PTV you can checkout the [ImportCheck](docs/importcheck.md) functionality.
 
+If you want to make sure you always insert a unique ID to the transfer databse checkout [UniqueIdGeneration](docs/UniqueIdGeneration.md) class. This helper class can be a life saver to make sure you always insert a unique ID.
+
 ## License
 
 The MIT License (MIT).
