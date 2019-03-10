@@ -8,25 +8,26 @@ use Illuminate\Support\MessageBag;
 class ModelValidationException extends Exception
 {
     /**
-     * Holds the defined errors
+     * Holds the defined errors.
      *
      * @var array
      */
     protected $errors = [];
 
     /**
-     * Create the exception instance with custom data
+     * Create the exception instance with custom data.
      *
-     * @param mixed $message
-     * @param int $code
+     * @param mixed      $message
+     * @param int        $code
      * @param \Exception $previous
      */
-    public function __construct($message = null, $code = 0, Exception $previous = null) {
+    public function __construct($message = null, $code = 0, Exception $previous = null)
+    {
         if ($message instanceof MessageBag) {
             foreach ($message->getMessages() as $column => $reason) {
                 $this->errors = [
                     'column' => $column,
-                    'reason' => $reason
+                    'reason' => $reason,
                 ];
             }
         }
@@ -36,7 +37,7 @@ class ModelValidationException extends Exception
     }
 
     /**
-     * Get the setted errors
+     * Get the setted errors.
      *
      * @return void
      */
