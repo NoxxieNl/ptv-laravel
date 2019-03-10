@@ -91,8 +91,8 @@ You can access one by dependency injection provided by Laravel:
 ````php
 <?php
 ...
-use Noxxie\Ptv\Order;
-use Noxxie\Ptv\Route;
+use Noxxie\Ptv\Contracts\Order;
+use Noxxie\Ptv\Contracts\Route;
 
 ...
 
@@ -109,14 +109,14 @@ When you use the dependency injection option you will have an instance of the `r
 ### Resolving it from the service container
 You can resolve the instances from the service container using:
 ````php
-$route = App()->Make('Noxxie\Ptv\Route');
-$order = App()->Make('Noxxie\Ptv\Order');
+$route = App()->Make('Noxxie\Ptv\Contracts\Route');
+$order = App()->Make('Noxxie\Ptv\Contracts\Order');
 ````
 
 When you want to create a new order within PTV you can also resolve the instance from the service container and execute a functionality at once. For example: you want to create a new order within PTV you can resolve and execute a order at once:
 
 ````php
-$order = App()->MakeWith('Noxxie\Ptv\Order', [
+$order = App()->MakeWith('Noxxie\Ptv\Contracts\Order', [
     'type' => 'CREATE',
     'attributes' => [...],
 ]);
@@ -125,13 +125,13 @@ $order = App()->MakeWith('Noxxie\Ptv\Order', [
 The same applies for resolving a route from the service container. However the functionality is limited to fetch one route from the database.
 
 ````php
-$route= App()->MakeWith('Noxxie\Ptv\Route', [
-    'id' => 123456,
+$route= App()->MakeWith('Noxxie\Ptv\Contracts\Route', [
+    'id' => '123456',
 ];
 ````
 
 ### Using the facades
-You can also use the provided facades to start using this package.
+You can also use the provided facades to start using this package. (This the recommended way to use this package)
 ````php
 <?php
 ...

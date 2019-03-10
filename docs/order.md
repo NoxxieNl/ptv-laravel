@@ -24,13 +24,13 @@ When you use the dependency injection option you will have an instance of the `o
 ### Resolving it from the service container
 You can resolve the instances from the service container using:
 ````php
-$order = App()->Make('Noxxie\Ptv\Order');
+$order = App()->Make('Noxxie\Ptv\Contracts\Order');
 ````
 
 When you want to create a new order within PTV you can also resolve the instance from the service container and execute a functionality at once. For example: you want to create a new order within PTV you can resolve and execute a order at once:
 
 ````php
-$order = App()->MakeWith('Noxxie\Ptv\Order', [
+$order = App()->MakeWith('Noxxie\Ptv\Contracts\Order', [
     'type' => 'CREATE',
     'attributes' => [...],
 ]);
