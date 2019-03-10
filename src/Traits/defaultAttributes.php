@@ -17,7 +17,7 @@ trait defaultAttributes
     protected $unique_id;
 
     /**
-     * Holds the bool if the unique ID generation must be done again when then generate method is called
+     * Holds the bool if the unique ID generation must be done again when then generate method is called.
      *
      * @var bool
      */

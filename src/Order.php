@@ -20,7 +20,7 @@ class Order implements DefaultOrderContract
     use defaultAttributes, friendlyAttributes;
 
     /**
-     * Contains all the validated orders that are ready for insertion
+     * Contains all the validated orders that are ready for insertion.
      *
      * @var array
      */
@@ -53,13 +53,14 @@ class Order implements DefaultOrderContract
 
         // Execute the method call
         $method = call_user_func([$this, $type], $attributes);
+
         return $method->save();
     }
 
     /**
      * Create a new order in the PTV database.
      *
-     * @param array  $attributes
+     * @param array $attributes
      *
      * @return bool
      */
@@ -71,7 +72,7 @@ class Order implements DefaultOrderContract
         // Check if a multidimensional array was specified if not convert the single one that it looks like a multidimensional array
         if (!$attributes->has(0)) {
             $attributes = collect([
-                $attributes->toArray()
+                $attributes->toArray(),
             ]);
         }
 
@@ -109,9 +110,9 @@ class Order implements DefaultOrderContract
 
             // And we are done
             $this->preparedOrders[] = [
-                'header' => $header,
-                'orderheader' => $orderHeader,
-                'orderactionpoint' => $orderActionpoint
+                'header'           => $header,
+                'orderheader'      => $orderHeader,
+                'orderactionpoint' => $orderActionpoint,
             ];
         }
 
@@ -158,7 +159,7 @@ class Order implements DefaultOrderContract
         // Check if a multidimensional array was specified if not convert the single one that it looks like a multidimensional array
         if (!$attributes->has(0)) {
             $attributes = collect([
-                $attributes->toArray()
+                $attributes->toArray(),
             ]);
         }
 
@@ -183,7 +184,7 @@ class Order implements DefaultOrderContract
 
             // And we are done
             $this->preparedOrders[] = [
-                'header' => $header
+                'header' => $header,
             ];
         }
 
@@ -221,7 +222,7 @@ class Order implements DefaultOrderContract
     }
 
     /**
-     * Save the prepared orders (Does not mather if it is a create, update or delete. The different methods may be combined into one save)
+     * Save the prepared orders (Does not mather if it is a create, update or delete. The different methods may be combined into one save).
      *
      * @return void
      */

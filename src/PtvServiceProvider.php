@@ -2,7 +2,6 @@
 
 namespace Noxxie\Ptv;
 
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;

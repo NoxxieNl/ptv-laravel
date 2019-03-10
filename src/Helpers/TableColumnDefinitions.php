@@ -4,8 +4,8 @@ namespace Noxxie\Ptv\Helpers;
 
 use Illuminate\Support\Facades\Schema;
 use Noxxie\Ptv\Models\Imph_import_header;
-use Noxxie\Ptv\Models\Iorh_order_header;
 use Noxxie\Ptv\Models\Iora_order_actionpoint;
+use Noxxie\Ptv\Models\Iorh_order_header;
 
 class TableColumnDefinitions
 {
