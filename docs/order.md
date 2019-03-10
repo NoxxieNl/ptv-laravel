@@ -36,15 +36,16 @@ $order = App()->MakeWith('Noxxie\Ptv\Order', [
 ]);
 ````
 
-### Old fashion
-Of course you can also use the old fashioned way and just create the class manually:
+### Using the facade
+You  can also use the provided facade to get access to the order instance.
 ````php
 <?php
 ...
-use Noxxie\Ptv\Order;
+use Noxxie\Ptv\Facades\Order;
 ...
+
 public function mockup() {
-    $Order = new Order();
+    $Order = Order::create(...);
 }
 ````
 
@@ -52,15 +53,17 @@ public function mockup() {
 
 The order object has three methods you can use to control the data flow within PTV.
 
-### Create(Collection $attributes, $directSave = true)
+### Create(array $attributes)
 
-With the create method you can create a new record within PTV. It is important that an instance of the `\illuminate\support\collection` must be entered as the parameter of this method.
+With the create method you can create a new record or records within the PTV transfer database. When you want to create one record you can define a flat array. If you want to import multi orders at once you can provide a multidimensional array. 
 
-You can do so by using the `collect` function that is provided within the Laravel framework.
-
-A simple example for creating a valid order:
+A simple example for creating one valid order:
 ````php
-$data = collect([
+...
+use Noxxie\Ptv\Facades\Order;
+...
+
+$data = [
     'reference'     => '987654321',
     'priority'      => 1,
     'postcode'      => '3744AA',
@@ -72,7 +75,49 @@ $data = collect([
     'from'          => '20190101',
     'till'          => '20191231',
     'IORH_TEXT_1'   => 'Hello world',
-]);
+];
+
+$order = order::create($data);
+$order->save();
+````
+
+When you want to create more orders at once you create the array like:
+````php
+...
+use Noxxie\Ptv\Facades\Order;
+...
+
+$data = [
+    [
+        'reference'     => '987654321',
+        'priority'      => 1,
+        'postcode'      => '3744AA',
+        'city'          => 'Baarn',
+        'street'        => 'Amsterdamsestraatweg',
+        'houseno'       => '1',
+        'country'       => 'NL',
+        'timewindow'    => '501',
+        'from'          => '20190101',
+        'till'          => '20191231',
+        'IORH_TEXT_1'   => 'Hello world',
+    ],
+    [
+        'reference'     => '12345678',
+        'priority'      => 1,
+        'postcode'      => '3744AA',
+        'city'          => 'Baarn',
+        'street'        => 'Amsterdamsestraatweg',
+        'houseno'       => '1',
+        'country'       => 'NL',
+        'timewindow'    => '501',
+        'from'          => '20190101',
+        'till'          => '20191231',
+        'IORH_TEXT_1'   => 'Hello world',
+    ],
+];
+
+$orders = order::create($data);
+$orders->save();
 ````
 
 In combination with the configuration option friendly naming the above attributes are easy to read and to understand what data goes were. (See the configuration section to view this functionality).
@@ -81,63 +126,65 @@ When you did not specify a friendly naming option you an use the raw column name
 
 **Caution** the create order does not check if the order exists within PTV. If the order with the same `reference` already exists within PTV it will **UPDATE** the order instead of creating a new one. This is the way the import in PTV works.
 
-### Update(Collection $attributes, $directSave = true)
+### Update(array $attributes)
 
-With the update method you can update a existing order within PTV. It is important that an instance of the `\illuminate\support\collection` must be entered as the parameter of this method.
-
-You can do so by using the `collect` function that is provided within the Laravel framework.
+With the update method you can update a existing order within PTV. When you want insert one record you can define a flat array. If you want to import multi orders at once you can provide a multidimensional array. 
 
 The implementation of the methods `update` and `create` are exactly the same the only difference is that the column name `IMPH_ACTION_CODE` is set to `UPDATE` instead of `NEW`.
 
 **Caution** the update order does not check if the order exists within PTV. If the order does **NOT** exist within PTV it will create a new order instead. This is the way PTV works.
 
-### Delete(Collection $attributes, $directSave = true)
+### Delete(array $attributes)
 
-When you want to delete an existing order within PTV you can use the Delete method. It is important that an instance of the `\illuminate\support\collection` must be entered as the parameter of this method.
+When you want to delete an existing order within PTV you can use the Delete method. When you want to create one record you can define a flat array. If you want to import multi orders at once you can provide a multidimensional array. 
 
-The delete method only needs one attribute to allow a correct deletion in PTV and that is the `reference` attribute. And so when we want to delete an order we can do so like:
+The delete method only needs one attribute to allow a correct deletion in PTV and that is the `reference` (if you are using friendly naming) or `IMPH_REFERENCE` (if you do not use friendly naming) attribute. And so when we want to delete an order we can do so like:
 
 ````php
-$order = App()->MakeWith('Noxxie\Ptv\Order', [
-    'type' => 'DELETE',
-    'attributes' => collect([
-        'reference' => 12345678,
-    ])
+...
+use Noxxie\Ptv\Facades\Order;
+...
+
+$order = order::delete([
+    'reference' => '12345678'
 ]);
+
+$order->save();
 ````
 This will add a delete record to the transfer database. The actual import in PTV will throw an error when the record cannot be deleted or cannot be found. There a various reasons why a order cannot be deleted within PTV.
 
-## The directSave functionality
-As you may have noticed every method within this class has a `$directSave` parameter. When this parameter is set to `false` the data added to the model will only be validated. (And when not valid it will throw an exception).
+# Saving the orders
 
-This is so you can insert allot of records at once with speed. When the `$directSave` is active every order you want to insert will be inserted one by one.
+After you created your creation, update or deletion of orders you must save those records to the database. You can do so by using the `save` method. This will insert all the records you have given to this package at once. This makes sure that all the records are not inserted one by one.
 
-With the `$directSave` option set to `false` you need to make one more call after you created every `order` instance you wanted.
+When you use the `save` method when there is nothing to save a `BadArgumentException` will be thrown.
 
-And that is the `massSave()` method. This is a `static` method within `order` class itself to allow the mass save of every created `order` record you have created.
+# inserting creations, updates and deletions at once
 
-````php
-    order::massSave(collection $collection);
-````
-
-The only parameter that needs to be enterd is a valid `collection` of all the orders you want to insert into the database and such you need to "collect" every order instance you created. For example when you want to delete two orders at once:
+The way this package is build you can function chain the `create`, `update`, `delete` and `save` methods. And so you can do everything at one to the database. The following examples shows the creation of a new order and the deletion of an existing order and saving it.
 
 ````php
-$data = collect([
-    'reference'     => '9876543212'
-]);
+...
+use Noxxie\Ptv\Facades\Order;
+...
 
-$data2 = collect([
-    'reference'     => '1234567892'
-]);
+$creationData = [
+    'reference'     => '987654321',
+    'priority'      => 1,
+    'postcode'      => '3744AA',
+    'city'          => 'Baarn',
+    'street'        => 'Amsterdamsestraatweg',
+    'houseno'       => '1',
+    'country'       => 'NL',
+    'timewindow'    => '501',
+    'from'          => '20190101',
+    'till'          => '20191231',
+    'IORH_TEXT_1'   => 'Hello world',
+];
 
-$order = App()->make(Order::class);
-$order->delete($data, false);
+$deletionData = [
+    'reference' => '12345678'
+];
 
-$order2 = App()->make(Order::class);
-$order2->delete($data2, false);
-
-$order::massSave(collect([$order, $order2]));
+$order = order::create($creationData)->delete($deletionData)->save();
 ````
-
-Because of how the `massSave` method works you can call this method from any of your created `order` instances. The method will add all the specified `order` records into the PTV transfer database and after they are inserted update them all at once to code `20` to let PTV know those rows can be imported.

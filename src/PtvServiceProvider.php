@@ -91,7 +91,7 @@ class PtvServiceProvider extends ServiceProvider
                 if (count($parameters) == 0) {
                     return new Order();
                 } else {
-                    if (!isset($parameters['attributes']) or !isset($parameters['type']) or !$parameters['attributes'] instanceof Collection) {
+                    if (!isset($parameters['attributes']) or !isset($parameters['type']) or !is_array($parameters['attributes'])) {
                         throw new InvalidArgumentException('Missing required parameters');
                     }
 
@@ -102,6 +102,9 @@ class PtvServiceProvider extends ServiceProvider
                 }
             }
         );
+
+        // Alias the class for simple facade binding
+        $this->app->alias(OrderContract::class, 'order');
 
         /*
             Bind the route contract into the container, it can be resolved by independency injection
@@ -123,6 +126,9 @@ class PtvServiceProvider extends ServiceProvider
                 }
             }
         );
+
+        // Alias the class for simple facade binding
+        $this->app->alias(RouteContract::class, 'route');
 
         /*
             Register a singleton for these class so that when a user is inserting allot of orders to the database

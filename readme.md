@@ -49,6 +49,8 @@ Example of a database connection:
 ],
 ...
 ````
+**Heads up**: defining your SQL database settings directly in `config/database.php` will result in that your username and password data will be uploaded into any git you may use. Be advised that using the `environment` file is much safer. (See the laravel documentation regarding environment variables).
+
 `friendly_naming`, This option allows you to use easier naming when writing imports for an order. I personally am always confused with what column name was used for which action and in what table it was stored.  With the friendly naming option you can "translate" the column names to a easier to remember name.
 
 By default this package comes with pre configured easy naming options. For example when importing an order I wanted a easier naming for the address data so it made more sense for me:
@@ -128,19 +130,19 @@ $route= App()->MakeWith('Noxxie\Ptv\Route', [
 ];
 ````
 
-### Old fashion
-Of course you can also use the old fashioned way and just create the class manually:
+### Using the facades
+You can also use the provided facades to start using this package.
 ````php
 <?php
 ...
-use Noxxie\Ptv\Route;
-use Noxxie\Ptv\Order;
+use Noxxie\Ptv\Facades\Order;
+use Noxxie\Ptv\Facades\Route;
 
 ...
 
 public function mockup() {
-    $Order = new Order();
-    $Route = new Route();
+    $Order = Order::create(...);
+    $Route = Route::getNotImported();
 }
 ````
 
