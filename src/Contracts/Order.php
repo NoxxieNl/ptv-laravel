@@ -2,37 +2,32 @@
 
 namespace Noxxie\Ptv\Contracts;
 
-use Illuminate\Support\Collection;
-
 interface Order
 {
     /**
      * Creates a new object for the order.
      *
-     * @param Illuminate\Support\Collection $attributes
-     * @param bool                          $directSave
+     * @param array $attributes
      *
      * @return mixed
      */
-    public function create(Collection $attributes, bool $directSave);
+    public function create(array $attributes);
 
     /**
      * Update an existing order.
      *
-     * @param Illuminate\Support\Collection $attributes
-     * @param bool                          $directSave
+     * @param array $attributes
      *
      * @return void
      */
-    public function update(Collection $attributes, bool $directSave);
+    public function update(array $attributes);
 
     /**
      * Delete an order.
      *
-     * @param Illuminate\Support\Collection $attributes
-     * @param bool                          $directSave
+     * @param array $attributes
      *
      * @return void
      */
-    public function delete(Collection $attributes, bool $directSave);
+    public function delete(array $attributes);
 }

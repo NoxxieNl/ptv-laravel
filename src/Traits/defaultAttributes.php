@@ -17,13 +17,24 @@ trait defaultAttributes
     protected $unique_id;
 
     /**
+     * Holds the bool if the unique ID generation must be done again when then generate method is called.
+     *
+     * @var bool
+     */
+    protected $recreateUniqueId = false;
+
+    /**
      * Set default attributes for each model using this trait.
+     *
+     * @param bool $recreateUniqueId
      *
      * @return void
      */
-    protected function fillWithDefaultAttributes()
+    protected function fillWithDefaultAttributes(bool $recreateUniqueId = false)
     {
         $configData = config('ptv.defaults');
+        $this->recreateUniqueId = $recreateUniqueId;
+
         if (count($configData) > 0) {
             foreach (config('ptv.defaults') as $table => $columns) {
                 if (count($columns) > 0) {
@@ -56,8 +67,9 @@ trait defaultAttributes
 
         // Replace the unique ID place holder with an actuall unique ID, when non is generated yet generate one
         if ($data == '%UNIQUE_ID%') {
-            if (!isset($this->unique_id)) {
+            if (!isset($this->unique_id) || $this->recreateUniqueId == true) {
                 $this->unique_id = app()->make(UniqueIdGeneration::class)->generate();
+                $this->recreateUniqueId = false;
             }
 
             return $this->unique_id;
